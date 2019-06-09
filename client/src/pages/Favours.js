@@ -16,7 +16,7 @@ const Dashboard = ({ history }) => {
     <Fragment>
       <Modal
         title="Create Favour"
-        body={<CreateFavourForm />}
+        body={<CreateFavourForm handleModal={handleModal} />}
         show={showModal}
         handleModal={handleModal}
       />

@@ -8,6 +8,7 @@ import PublicRoute from '../components/Routing/PublicRoute';
 // Pages
 import Home from '../pages/Home';
 import Dashboard from '../pages/Dashboard';
+import Favours from '../pages/Favours';
 import Signup from '../pages/Signup';
 import Login from '../pages/Login';
 import ForgotPassword from '../pages/ForgotPassword';
@@ -42,6 +43,7 @@ const AppRouter = () => {
             <Switch>
                 <PublicRoute exact path="/" component={Home} />
                 <PrivateRoute path="/dashboard/" exact component={Dashboard} />
+                <PrivateRoute path="/favours/" component={Favours} />
                 <PrivateRoute path="/profile/" component={Profile} />
                 <PrivateRoute path="/profile-settings/" component={ProfileSettings} />
                 <Route path="/signup/" render={props => <Signup {...props} />} />

@@ -1,10 +1,11 @@
 import React from "react";
 import * as Icon from "react-feather";
 import { Button } from "react-bootstrap";
+import './Pagination.css';
 
 const Pagination = ({ onClick, skip, limit, favoursPerPage, favoursCount }) => {
   return (
-    <div className="d-flex justify-content-between">
+    <div className="d-flex justify-content-between pagination">
       {skip !== 0 ? (
         <Button
           value="back"

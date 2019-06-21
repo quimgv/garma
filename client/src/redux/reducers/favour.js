@@ -1,4 +1,11 @@
-import { GET_FAVOURS, CREATE_FAVOUR, FAVOURS_LOADING, GET_FAVOURS_FAILED } from "../actions/types";
+import {
+  GET_FAVOURS,
+  FAVOURS_LOADING,
+  GET_FAVOURS_FAILED,
+  GET_CURRENT_FAVOUR_FAILED,
+  GET_CURRENT_FAVOUR,
+  UNMOUNT_CURRENT_FAVOUR
+} from "../actions/types";
 
 const inistialState = {
   favours: [],
@@ -22,10 +29,20 @@ export default function(state = inistialState, action) {
         favoursCount: payload.favoursCount,
         loading: false
       };
+    case GET_CURRENT_FAVOUR:
+      return {
+        ...state,
+        favours: [payload],
+        loading: false,
+        favoursCount: null
+      };
     case GET_FAVOURS_FAILED:
+    case GET_CURRENT_FAVOUR_FAILED:
+    case UNMOUNT_CURRENT_FAVOUR:
       return {
         favours: [],
-        loading: false
+        loading: false,
+        favoursCount: null
       };
     default:
       return state;

@@ -2,7 +2,10 @@ import {
   CREATE_FAVOUR,
   GET_FAVOURS,
   FAVOURS_LOADING,
-  GET_FAVOURS_FAILED
+  GET_FAVOURS_FAILED,
+  GET_CURRENT_FAVOUR,
+  GET_CURRENT_FAVOUR_FAILED,
+  UNMOUNT_CURRENT_FAVOUR
 } from "./types";
 
 import { loadUser } from "../actions/auth";
@@ -52,3 +55,20 @@ export const getFavours = (
     console.log(err);
   }
 };
+
+export const getCurrentFavour = favourId => async dispatch => {
+  try {
+    dispatch(favoursLoading());
+    const res = await axios.get("/favour/" + favourId);
+    dispatch({
+      type: GET_CURRENT_FAVOUR,
+      payload: res.data
+    });
+  } catch (err) {
+    dispatch({ type: GET_CURRENT_FAVOUR_FAILED });
+    handleServerErrors(err, dispatch, setAlert);
+    console.log(err);
+  }
+};
+
+export const unmountCurrentFavour = () => ({type: UNMOUNT_CURRENT_FAVOUR});

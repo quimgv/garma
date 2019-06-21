@@ -13,8 +13,8 @@ import SmallLogo from "../../../assets/img/small-logo.png";
 
 // Redux
 import { connect } from "react-redux";
-import { logout } from "../../../actions/auth";
-import { setSideMenu } from "../../../actions/sideMenu";
+import { logout } from "../../../redux/actions/auth";
+import { setSideMenu } from "../../../redux/actions/sideMenu";
 
 // User Images
 import userImage from "../../../assets/img/user/undefined.gif";

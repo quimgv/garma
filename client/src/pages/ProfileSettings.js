@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 
 // Redux
 import { connect } from 'react-redux';
-import { setAlert, clearAlerts } from '../actions/alert';
-import { loadUser, logoutAll } from '../actions/auth';
+import { setAlert, clearAlerts } from '../redux/actions/alert';
+import { loadUser, logoutAll } from '../redux/actions/auth';
 
 // Validation
 import {

@@ -22,8 +22,8 @@ import '../assets/css/responsive.css';
 
 // Redux
 import { Provider } from 'react-redux';
-import store from '../store';
-import { loadUser } from '../actions/auth';
+import store from '../redux/store';
+import { loadUser } from '../redux/actions/auth';
 
 // Auth
 import setAuthToken from '../utils/setAuthToken';

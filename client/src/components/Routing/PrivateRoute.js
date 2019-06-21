@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 // Redux
 import { connect } from 'react-redux';
-import { clearAlerts } from '../../actions/alert';
+import { clearAlerts } from '../../redux/actions/alert';
 
 // Components
 import Navigation from '../Layout/Navigation/Navigation';
@@ -24,7 +24,7 @@ const PrivateRoute = ({ component: Component, auth: { isAuthenticated, loading }
     return (
         <div className="page-wrapper">
             <Navigation />
-            <SideMenu />
+            <SideMenu sideMenu={sideMenu} />
             <div className={`main-content d-flex flex-column ${!sideMenu ? '' : 'hide-sidemenu'}`}>
                 <Alert />
                 <Route {...rest} render={props => !isAuthenticated && !loading ? (<Redirect to="/login" />) : (<Component {...props} />)} />

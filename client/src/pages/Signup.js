@@ -5,8 +5,8 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import { connect } from 'react-redux';
 
 // Redux
-import { setAlert, clearAlerts } from '../actions/alert';
-import { register } from '../actions/auth';
+import { setAlert, clearAlerts } from '../redux/actions/alert';
+import { register } from '../redux/actions/auth';
 
 // Components
 import Alert from '../components/Common/Alert';

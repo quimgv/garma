@@ -3,10 +3,11 @@ import { Row, Col, Button } from "react-bootstrap";
 
 // Components
 import Modal from "../components/Common/Modal";
-import CreateFavourForm from '../components/CreateFavourForm';
+import CreateFavourForm from "../components/CreateFavourForm";
+import FavoursList from '../components/FavoursList';
 
-const Dashboard = ({ history }) => {
-  const [showModal, setShowModal] = useState();
+const FavoursPage = ({ history }) => {
+  const [showModal, setShowModal] = useState(false);
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -19,6 +20,7 @@ const Dashboard = ({ history }) => {
         body={<CreateFavourForm handleModal={handleModal} />}
         show={showModal}
         handleModal={handleModal}
+        footer={false}
       />
       <Row>
         <Col xs={12}>
@@ -35,8 +37,13 @@ const Dashboard = ({ history }) => {
           </div>
         </Col>
       </Row>
+      <Row>
+        <Col>
+          <FavoursList />
+        </Col>
+      </Row>
     </Fragment>
   );
 };
 
-export default Dashboard;
+export default FavoursPage;

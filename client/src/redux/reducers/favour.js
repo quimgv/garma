@@ -2,6 +2,7 @@ import { GET_FAVOURS, CREATE_FAVOUR, FAVOURS_LOADING, GET_FAVOURS_FAILED } from 
 
 const inistialState = {
   favours: [],
+  favoursCount: null,
   loading: true
 };
 
@@ -17,7 +18,8 @@ export default function(state = inistialState, action) {
     case GET_FAVOURS:
       return {
         ...state,
-        favours: [...payload],
+        favours: [...payload.favours],
+        favoursCount: payload.favoursCount,
         loading: false
       };
     case GET_FAVOURS_FAILED:

@@ -27,22 +27,20 @@ export const createFavour = favour => async dispatch => {
   }
 };
 
-export const getFavours = (categoriesSearch, limit, skip) => async dispatch => {
-  //   let queryParams = "?limit=" + limit;
+export const getFavours = (
+  categoriesSearch,
+  limit = 10,
+  skip = 0
+) => async dispatch => {
+  let queryParams = `?limit=${limit}&skip=${skip}`;
 
-  //   if (skip) {
-  //     queryParams = queryParams.concat("&skip=" + skip);
-  //   }
-
-  //   if (categoriesSearch.length > 0) {
-  //     queryParams = queryParams.concat("&categories=" + categoriesSearch.join());
-  //   }
+  // if (categoriesSearch.length > 0) {
+  //   queryParams = queryParams.concat("&categories=" + categoriesSearch.join());
+  // }
 
   try {
     dispatch(favoursLoading());
-    //   const res = await axios.get(`/favour/${queryParams}`);
-
-    const res = await axios.get(`/favour`);
+    const res = await axios.get(`/favour/${queryParams}`);
 
     dispatch({
       type: GET_FAVOURS,

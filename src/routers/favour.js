@@ -8,7 +8,7 @@ const FavoursController = require('../controllers/favour');
 // @route   GET /favour/
 // @desc    Get all favours
 // @access  Public
-router.get('/', FavoursController.get_all_favours);
+router.get('/', FavoursController.get_favours);
 
 // @route   POST /favour/
 // @desc    Create new favour

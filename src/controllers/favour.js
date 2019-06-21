@@ -4,33 +4,36 @@ const mongoose = require("mongoose");
 const User = require("../models/user");
 const Favour = require("../models/favour");
 
-exports.get_all_favours = async (req, res) => {
-    let filters = {};
-    const categories = req.query.categories ? req.query.categories.split(",") : [];
-    const limit = Number(req.query.limit);
-    const skip = Number(req.query.skip);
-  
-    if (categories.length > 0) {
-        filters.categories = {
-        categories: { $in: categories }
-      };
-    }
-  
-    try {
-      const favours = await Favour.find(filters, null, { limit, skip });
-      res.json(favours);
-    } catch (err) {
-      console.log(err);
-      res.status(400).json(err.message);
-    }
-  };
+exports.get_favours = async (req, res) => {
+  let filters = {};
+  const categories = req.query.categories
+    ? req.query.categories.split(",")
+    : [];
+  const limit = Number(req.query.limit);
+  const skip = Number(req.query.skip);
+
+  if (categories.length > 0) {
+    filters.categories = {
+      categories: { $in: categories }
+    };
+  }
+
+  try {
+    const favours = await Favour.find(filters, null, { limit, skip });
+    const favoursCount = await Favour.countDocuments(filters);
+    res.json({ favours, favoursCount });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
 
 exports.create_favour = async (req, res) => {
-//   const { errors, isValid } = validateCreateFavours(req.body, req.user);
+  //   const { errors, isValid } = validateCreateFavours(req.body, req.user);
 
-//   if (!isValid) {
-//     return res.status(400).json({ showErr: errors });
-//   }
+  //   if (!isValid) {
+  //     return res.status(400).json({ showErr: errors });
+  //   }
   const favourFields = {
     owner: {
       user: req.user._id

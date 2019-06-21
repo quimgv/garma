@@ -4,7 +4,7 @@ import { Row, Col, Button } from "react-bootstrap";
 // Components
 import Modal from "../components/Common/Modal";
 import CreateFavourForm from "../components/CreateFavourForm";
-import FavoursList from '../components/FavoursList';
+import FavoursList from "../components/FavoursList";
 
 const FavoursPage = ({ history }) => {
   const [showModal, setShowModal] = useState(false);
@@ -39,7 +39,11 @@ const FavoursPage = ({ history }) => {
       </Row>
       <Row>
         <Col>
-          <FavoursList />
+          <div className="card mb-4">
+            <div className="card-body favour-page">
+              <FavoursList />
+            </div>
+          </div>
         </Col>
       </Row>
     </Fragment>

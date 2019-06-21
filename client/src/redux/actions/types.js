@@ -16,6 +16,7 @@ export const LOGOUT = 'LOGOUT';
 export const SET_SIDE_MENU = 'SET_SIDE_MENU';
 
 // Favour
-export const GET_FAVOURS = 'GET_FAVOURS';
-export const CREATE_FAVOUR = 'CREATE_FAVOUR';
 export const FAVOURS_LOADING = 'FAVOURS_LOADING';
+export const GET_FAVOURS = 'GET_FAVOURS';
+export const GET_FAVOURS_FAILED = 'GET_FAVOURS_FAILED';
+export const CREATE_FAVOUR = 'CREATE_FAVOUR';

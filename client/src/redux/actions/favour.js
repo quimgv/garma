@@ -1,4 +1,9 @@
-import { CREATE_FAVOUR, GET_FAVOURS, FAVOURS_LOADING } from "./types";
+import {
+  CREATE_FAVOUR,
+  GET_FAVOURS,
+  FAVOURS_LOADING,
+  GET_FAVOURS_FAILED
+} from "./types";
 
 import { loadUser } from "../actions/auth";
 import { setAlert } from "../actions/alert";
@@ -15,6 +20,7 @@ export const createFavour = favour => async dispatch => {
       type: CREATE_FAVOUR
     });
     dispatch(loadUser()); // To update user score in navbar
+    dispatch(getFavours());
     dispatch(setAlert("Favour created", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
@@ -22,33 +28,29 @@ export const createFavour = favour => async dispatch => {
 };
 
 export const getFavours = (categoriesSearch, limit, skip) => async dispatch => {
-//   let queryParams = "?limit=" + limit;
+  //   let queryParams = "?limit=" + limit;
 
-//   if (skip) {
-//     queryParams = queryParams.concat("&skip=" + skip);
-//   }
+  //   if (skip) {
+  //     queryParams = queryParams.concat("&skip=" + skip);
+  //   }
 
-//   if (categoriesSearch.length > 0) {
-//     queryParams = queryParams.concat("&categories=" + categoriesSearch.join());
-//   }
+  //   if (categoriesSearch.length > 0) {
+  //     queryParams = queryParams.concat("&categories=" + categoriesSearch.join());
+  //   }
 
   try {
-      dispatch(favoursLoading());
+    dispatch(favoursLoading());
     //   const res = await axios.get(`/favour/${queryParams}`);
-    const res = await axios.get(`/favour`);
-    dispatch({
-        type: GET_FAVOURS,
-        payload: res.data
-      });
-    // setTimeout(() => {
-    //     dispatch({
-    //         type: GET_FAVOURS,
-    //         payload: res.data
-    //       });
-    // }, 3000)
-    
 
+    const res = await axios.get(`/favour`);
+
+    dispatch({
+      type: GET_FAVOURS,
+      payload: res.data
+    });
   } catch (err) {
+    dispatch({ type: GET_FAVOURS_FAILED });
+    handleServerErrors(err, dispatch, setAlert);
     console.log(err);
   }
 };

@@ -1,4 +1,4 @@
-import { GET_FAVOURS, CREATE_FAVOUR, FAVOURS_LOADING } from "../actions/types";
+import { GET_FAVOURS, CREATE_FAVOUR, FAVOURS_LOADING, GET_FAVOURS_FAILED } from "../actions/types";
 
 const inistialState = {
   favours: [],
@@ -9,16 +9,21 @@ export default function(state = inistialState, action) {
   const { type, payload } = action;
 
   switch (type) {
+    case FAVOURS_LOADING:
+      return {
+        ...state,
+        loading: true
+      };
     case GET_FAVOURS:
       return {
         ...state,
         favours: [...payload],
         loading: false
       };
-    case FAVOURS_LOADING:
+    case GET_FAVOURS_FAILED:
       return {
-        ...state,
-        loading: true
+        favours: [],
+        loading: false
       };
     default:
       return state;

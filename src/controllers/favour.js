@@ -68,3 +68,18 @@ exports.create_favour = async (req, res) => {
     res.status(400).json(err.message);
   }
 };
+
+exports.get_favour = async (req, res) => {
+  try {
+    const favour = await Favour.findById(req.params.id)
+      .populate("helper.user")
+      .populate("owner.user");
+    if (!favour) {
+      return res.status(404).json("Favour not found");
+    }
+    res.json(favour);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};

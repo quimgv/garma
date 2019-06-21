@@ -18,7 +18,7 @@ router.post('/', auth, FavoursController.create_favour);
 // @route   GET /favour/:id
 // @desc    Get favour by id
 // @access  Public
-// router.get('/:id', FavoursController.get_favour);
+router.get('/:id', FavoursController.get_favour);
 
 // @route   PATCH /favour/:id
 // @desc    Update favour by id

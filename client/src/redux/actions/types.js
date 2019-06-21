@@ -14,3 +14,8 @@ export const LOGOUT = 'LOGOUT';
 
 // SideMenu
 export const SET_SIDE_MENU = 'SET_SIDE_MENU';
+
+// Favour
+export const GET_FAVOURS = 'GET_FAVOURS';
+export const CREATE_FAVOUR = 'CREATE_FAVOUR';
+export const FAVOURS_LOADING = 'FAVOURS_LOADING';

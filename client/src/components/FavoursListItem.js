@@ -29,7 +29,7 @@ const FavoursListItem = ({
     <Card className="mb-4 text-center">
       <Card.Header className="header">{title}</Card.Header>
       <Card.Body>
-        <Card.Text>{description}</Card.Text>
+        <Card.Text>{description.length > 150 ? description.substring(0,150) + ' [...]' : description}</Card.Text>
 
         <div className="d-flex justify-content-between align-items-center">
           <Badge pill variant={statusVariant} className="mr-2">

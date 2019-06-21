@@ -1,16 +1,16 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
-const ConfirmModal = ({
+const ModalComponent = ({
   title,
   body,
   show,
   handleModal,
   handleConfirm,
   handleCancel,
-  confirmButtonText,
-  cancelButtonText,
-  footer
+  confirmButtonText = 'Confirm',
+  cancelButtonText  = 'Cancel',
+  footer = true
 }) => {
   return (
     <Modal show={show} onHide={handleModal}>
@@ -22,28 +22,24 @@ const ConfirmModal = ({
 
       {footer && (
         <Modal.Footer>
-          {cancelButtonText && (
             <Button
               variant="outline-danger"
-              value={cancelButtonText || "Cancel"}
+              value={cancelButtonText}
               onClick={e => handleCancel(e)}
             >
-              {cancelButtonText || "Cancel"}
+              {cancelButtonText}
             </Button>
-          )}
-          {confirmButtonText && (
             <Button
               variant="primary"
-              value={confirmButtonText || "Confirm"}
+              value={confirmButtonText}
               onClick={e => handleConfirm(e)}
             >
-              {confirmButtonText || "Confirm"}
+              {confirmButtonText}
             </Button>
-          )}
         </Modal.Footer>
       )}
     </Modal>
   );
 };
 
-export default ConfirmModal;
+export default ModalComponent;

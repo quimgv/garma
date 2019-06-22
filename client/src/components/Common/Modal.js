@@ -1,40 +1,38 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
 
+// Redux
+import { connect } from 'react-redux';
+import { handleModal }  from '../../redux/actions/modal';
+
 const ModalComponent = ({
-  title,
-  body,
-  show,
-  handleModal,
+  modal,
   handleConfirm,
-  handleCancel,
-  confirmButtonText = 'Confirm',
-  cancelButtonText  = 'Cancel',
-  footer = true
+  handleModal
 }) => {
   return (
-    <Modal show={show} onHide={handleModal}>
+    <Modal show={modal.show} onHide={handleModal}>
       <Modal.Header closeButton>
-        <Modal.Title>{title}</Modal.Title>
+        <Modal.Title>{modal.title}</Modal.Title>
       </Modal.Header>
 
-      <Modal.Body>{body}</Modal.Body>
+      <Modal.Body>{modal.body}</Modal.Body>
 
-      {footer && (
+      {modal.footer && (
         <Modal.Footer>
             <Button
               variant="outline-danger"
-              value={cancelButtonText}
-              onClick={e => handleCancel(e)}
+              value={modal.cancelButtonText}
+              onClick={handleModal}
             >
-              {cancelButtonText}
+              {modal.cancelButtonText}
             </Button>
             <Button
               variant="primary"
-              value={confirmButtonText}
+              value={modal.confirmButtonText}
               onClick={e => handleConfirm(e)}
             >
-              {confirmButtonText}
+              {modal.confirmButtonText}
             </Button>
         </Modal.Footer>
       )}
@@ -42,4 +40,8 @@ const ModalComponent = ({
   );
 };
 
-export default ModalComponent;
+const mapStateToProps = state => ({
+  modal: state.modal
+});
+
+export default connect(mapStateToProps, { handleModal })(ModalComponent);

@@ -19,7 +19,7 @@ const FavourStatus = ({ favourStatus }) => {
 
 const mapStateToProps = state => {
   return {
-    favourStatus: state.favour.favours[0].status
+    favourStatus: state.favour.currentFavour.status
   };
 };
 

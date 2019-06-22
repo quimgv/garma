@@ -7,7 +7,6 @@ import { isOwner, isHelper } from "../../utils/helperFunctions";
 import { connect } from "react-redux";
 
 const OwnAssigned = ({ favour, user }) => {
-  // console.log(favour.owner.user._id, user._id)
   if (user && favour) {
     if (isOwner(favour.owner.user._id, user._id)) {
       return (
@@ -31,7 +30,7 @@ const OwnAssigned = ({ favour, user }) => {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  favour: state.favour.favours[0]
+  favour: state.favour.currentFavour
 });
 
 export default connect(mapStateToProps)(OwnAssigned);

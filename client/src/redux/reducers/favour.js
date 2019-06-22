@@ -8,7 +8,8 @@ import {
 } from "../actions/types";
 
 const inistialState = {
-  favours: [],
+  favoursList: [],
+  currentFavour: null,
   favoursCount: null,
   loading: true
 };
@@ -26,24 +27,21 @@ export default function(state = inistialState, action) {
       return {
         ...state,
         favours: [...payload.favours],
+        currentFavour: null,
         favoursCount: payload.favoursCount,
         loading: false
       };
     case GET_CURRENT_FAVOUR:
       return {
-        ...state,
-        favours: [payload],
+        favoursList: [],
+        currentFavour: payload,
         loading: false,
         favoursCount: null
       };
     case GET_FAVOURS_FAILED:
     case GET_CURRENT_FAVOUR_FAILED:
     case UNMOUNT_CURRENT_FAVOUR:
-      return {
-        favours: [],
-        loading: false,
-        favoursCount: null
-      };
+      return inistialState;
     default:
       return state;
   }

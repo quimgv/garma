@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const _ = require('lodash');
 
 // Load models
 const User = require("../models/user");
@@ -78,6 +79,29 @@ exports.get_favour = async (req, res) => {
       return res.status(404).json("Favour not found");
     }
     res.json(favour);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
+
+// @route   PATCH /favour/:id
+exports.update_favour = async (req, res) => {
+  let updates = req.body;
+
+  try {
+    let favour = await Favour.findById(req.params.id);
+
+    if (!favour) {
+      res.status(404).json("Favour not found");
+    }
+    updates = _.merge(favour, updates);
+    const favourUpdate = await Favour.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true }
+    );
+    res.json(favourUpdate);
   } catch (err) {
     console.log(err);
     res.status(400).json(err.message);

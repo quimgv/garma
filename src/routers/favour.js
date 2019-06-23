@@ -23,6 +23,6 @@ router.get('/:id', FavoursController.get_favour);
 // @route   PATCH /favour/:id
 // @desc    Update favour by id
 // @access  Private
-// router.patch('/:id', auth, FavoursController.update_favour);
+router.patch('/:id', auth, FavoursController.update_favour);
 
 module.exports = router;

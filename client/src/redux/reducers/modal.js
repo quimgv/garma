@@ -3,8 +3,8 @@ import { SHOW_MODAL, HIDE_MODAL } from "../actions/types";
 const inistialState = {
   show: false,
   footer: true,
-  confirmButtonText: 'Confirm',
-  cancelButtonText: 'Cancel'
+  confirmButtonText: "Confirm",
+  cancelButtonText: "Cancel"
 };
 
 export default function(state = inistialState, action) {

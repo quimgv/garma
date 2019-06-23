@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { withRouter } from 'react-router-dom';
 import { Dropdown, DropdownButton } from "react-bootstrap";
 import { isOwner } from "../../utils/helperFunctions";
 
@@ -8,8 +9,9 @@ import CreateUpdateFavourForm from "../CreateUpdateFavourForm";
 // Redux
 import { connect } from "react-redux";
 import { handleModal } from "../../redux/actions/modal";
+import { deleteFavour } from '../../redux/actions/favour';
 
-const FavourItemActions = ({ favour, handleModal, user }) => {
+const FavourItemActions = ({ deleteFavour, favour, handleModal, history, user }) => {
   const [dropDownItems, setDropdownItems] = useState();
 
   useEffect(() => {
@@ -18,10 +20,20 @@ const FavourItemActions = ({ favour, handleModal, user }) => {
     }
   }, [favour, user]);
 
-  const modalContent = {
+  const editModalContent = {
     title: "Edit Favour",
     body: <CreateUpdateFavourForm action="edit" />,
     footer: false
+  };
+
+  const deleteModalContent = {
+    title: "Delete Favour",
+    body: 'Are you sure?',
+    handleConfirm: () => {
+      deleteFavour(favour._id);
+      handleModal();
+      history.push('/favours');
+    }
   };
 
   const setDropdownItemsStart = () => {
@@ -30,11 +42,11 @@ const FavourItemActions = ({ favour, handleModal, user }) => {
       dropDownItems.push(
         {
           label: "Edit",
-          action: () => handleModal(modalContent)
+          action: () => handleModal(editModalContent)
         },
         {
           label: "Delete",
-          action: () => console.log("Delete action")
+          action: () => handleModal(deleteModalContent)
         }
       );
     }
@@ -58,7 +70,7 @@ const FavourItemActions = ({ favour, handleModal, user }) => {
               <Dropdown.Item
                 key={idx}
                 eventKey={dropDownItem.label}
-                onClick={() => handleModal(modalContent)}
+                onClick={dropDownItem.action}
               >
                 {dropDownItem.label}
               </Dropdown.Item>
@@ -77,7 +89,7 @@ const mapStateToProps = state => ({
   favour: state.favour.currentFavour
 });
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
-  { handleModal }
-)(FavourItemActions);
+  { handleModal, deleteFavour }
+)(FavourItemActions));

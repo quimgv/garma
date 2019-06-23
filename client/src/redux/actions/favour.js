@@ -71,4 +71,17 @@ export const getCurrentFavour = favourId => async dispatch => {
   }
 };
 
-export const unmountCurrentFavour = () => ({type: UNMOUNT_CURRENT_FAVOUR});
+export const unmountCurrentFavour = () => ({ type: UNMOUNT_CURRENT_FAVOUR });
+
+export const editFavour = (favourId, updates) => async dispatch => {
+
+  try {
+    await axios.patch("/favour/" + favourId, updates);
+    dispatch(getCurrentFavour(favourId));
+    dispatch(setAlert("Favour updated", "success"));
+  } catch (err) {
+    dispatch({ type: GET_CURRENT_FAVOUR_FAILED });
+    handleServerErrors(err, dispatch, setAlert);
+    console.log(err);
+  }
+};

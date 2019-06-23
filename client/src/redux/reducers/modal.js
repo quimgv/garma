@@ -1,7 +1,10 @@
 import { SHOW_MODAL, HIDE_MODAL } from "../actions/types";
 
 const inistialState = {
-  show: false
+  show: false,
+  footer: true,
+  confirmButtonText: 'Confirm',
+  cancelButtonText: 'Cancel'
 };
 
 export default function(state = inistialState, action) {
@@ -10,6 +13,7 @@ export default function(state = inistialState, action) {
   switch (type) {
     case SHOW_MODAL:
       return {
+        ...state,
         ...payload,
         show: true
       };

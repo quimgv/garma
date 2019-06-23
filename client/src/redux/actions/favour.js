@@ -85,3 +85,14 @@ export const editFavour = (favourId, updates) => async dispatch => {
     console.log(err);
   }
 };
+
+export const deleteFavour = (favourId) => async dispatch => {
+
+  try {
+    const res = await axios.delete("/favour/" + favourId);
+    dispatch(setAlert(`Favour "${res.data.title}" deleted`, "success"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+    console.log(err);
+  }
+};

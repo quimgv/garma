@@ -25,4 +25,9 @@ router.get('/:id', FavoursController.get_favour);
 // @access  Private
 router.patch('/:id', auth, FavoursController.update_favour);
 
+// @route   PATCH /favour/:id
+// @desc    Delete favour by id
+// @access  Private
+router.delete('/:id', auth, FavoursController.delete_favour);
+
 module.exports = router;

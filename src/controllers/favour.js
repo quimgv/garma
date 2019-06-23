@@ -107,3 +107,13 @@ exports.update_favour = async (req, res) => {
     res.status(400).json(err.message);
   }
 };
+
+exports.delete_favour = async (req,res) => {
+  try {
+      const favour = await Favour.findByIdAndDelete(req.params.id);
+      res.json(favour);
+  } catch(err) {
+      console.log(err);
+      res.status(500).json(err);
+  }
+};

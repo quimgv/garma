@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Button, Form, FormControl } from "react-bootstrap";
+import _ from "lodash";
 
 // Redux
 import { connect } from "react-redux";
-import { createFavour } from "../redux/actions/favour";
+import { createFavour, editFavour } from "../redux/actions/favour";
+import { handleModal } from "../redux/actions/modal";
 
 // Validation
 import { createFavourValidation } from "../validation/formsValidation";
 
-const CreateFavourForm = ({ handleModal, createFavour }) => {
+const CreateFavourForm = ({
+  action,
+  createFavour,
+  editFavour,
+  favour,
+  handleModal
+}) => {
   const initialState = {
     title: "",
     description: "",
@@ -71,14 +79,46 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
     categoriesControl
   } = formData;
 
+  useEffect(() => {
+    let categoriesToFill = [];
+    if (favour && favour.categories.length > 0) {
+      favour.categories.forEach(category => {
+        categoriesToFill.push({
+          name: category,
+          isChecked: true
+        });
+      });
+      console.log(_.merge(categoriesControl, categoriesToFill));
+    }
+
+    if (favour) {
+      setFormData({
+        ...formData,
+        title: favour.title,
+        description: favour.description,
+        value: favour.value,
+        urgency: favour.urgency,
+        difficulty: favour.difficulty,
+        categories: favour.categories,
+        categoriesControl: [..._.merge(categoriesControl, categoriesToFill)]
+      });
+    }
+  }, []);
+
   const handleSubmit = e => {
     e.preventDefault();
+
+    console.log(e.target.attributes.getNamedItem("action").value);
+
+    const action = e.target.attributes.getNamedItem("action").value;
+
+    let valueFormat = value.toString();
 
     // Form Validation
     const { errors, isValid } = createFavourValidation(
       title,
       description,
-      value,
+      valueFormat,
       urgency,
       difficulty
     );
@@ -95,14 +135,27 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
       return setFormData({ ...formData, ...resetErrors, ...errors });
     }
 
-    createFavour({
-      title,
-      description,
-      value,
-      urgency,
-      difficulty,
-      categories
-    });
+    if (action === "create") {
+      createFavour({
+        title,
+        description,
+        value,
+        urgency,
+        difficulty,
+        categories
+      });
+    } else if (action === "edit") {
+      let updates = {
+        title,
+        description,
+        value: valueFormat,
+        urgency,
+        difficulty,
+        categories
+      };
+      editFavour(favour && favour._id, updates);
+    }
+
     setFormData(initialState);
     handleModal();
   };
@@ -131,7 +184,8 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
 
   return (
     <div>
-      <Form onSubmit={(e, values) => handleSubmit(e, values)}>
+      {console.log(formData)}
+      <Form>
         <Form.Group>
           <Form.Label>Favour Title</Form.Label>
           <Form.Control
@@ -189,6 +243,7 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
             onChange={handleOnChange}
             isValid={!!urgencyError}
             isInvalid={urgencyError}
+            value={urgency}
           >
             <option>Choose...</option>
             <option>Urgent</option>
@@ -209,6 +264,7 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
             onChange={handleOnChange}
             isValid={!!difficultyError}
             isInvalid={difficultyError}
+            value={difficulty}
           >
             <option>Choose...</option>
             <option>Easy</option>
@@ -244,8 +300,12 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
         </Form.Group>
 
         <div className="text-center">
-          <Button variant="primary" type="submit">
-            Create favour
+          <Button
+            variant="primary"
+            onClick={e => handleSubmit(e)}
+            action={action}
+          >
+            {action === "create" ? "Create favour" : "Update"}
           </Button>
         </div>
       </Form>
@@ -253,7 +313,11 @@ const CreateFavourForm = ({ handleModal, createFavour }) => {
   );
 };
 
+const mapStateToProps = state => ({
+  favour: state.favour.currentFavour
+});
+
 export default connect(
-  null,
-  { createFavour }
+  mapStateToProps,
+  { createFavour, editFavour, handleModal }
 )(CreateFavourForm);

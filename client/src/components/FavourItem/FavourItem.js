@@ -36,7 +36,7 @@ const FavourItem = ({ favour, favourLoading }) => {
 };
 
 const mapStateToProps = state => ({
-  favour: state.favour.favours[0],
+  favour: state.favour.currentFavour,
   favourLoading: state.favour.loading
 });
 

@@ -3,25 +3,24 @@ import { Row, Col, Button } from "react-bootstrap";
 
 // Components
 import Modal from "../components/Common/Modal";
-import CreateFavourForm from "../components/CreateFavourForm";
+import CreateUpdateFavourForm from "../components/CreateUpdateFavourForm";
 import FavoursList from "../components/FavoursList";
 
-const FavoursPage = ({ history }) => {
-  const [showModal, setShowModal] = useState(false);
+// Redux
+import { connect } from 'react-redux';
+import { handleModal } from '../redux/actions/modal';
 
-  const handleModal = () => {
-    setShowModal(!showModal);
-  };
+const FavoursPage = ({ handleModal }) => {
+
+  const modalContent = {
+    title: "Create Favour",
+    body: <CreateUpdateFavourForm action='create'/>,
+    footer: false
+  }
 
   return (
     <Fragment>
-      <Modal
-        title="Create Favour"
-        body={<CreateFavourForm handleModal={handleModal} />}
-        show={showModal}
-        handleModal={handleModal}
-        footer={false}
-      />
+      <Modal />
       <Row>
         <Col xs={12}>
           <div style={{ marginBottom: "20px" }}>
@@ -30,7 +29,7 @@ const FavoursPage = ({ history }) => {
               block
               size="lg"
               className="mt-2 mr-2 rounded-pill"
-              onClick={handleModal}
+              onClick={() => handleModal(modalContent)}
             >
               Create favour
             </Button>
@@ -50,4 +49,4 @@ const FavoursPage = ({ history }) => {
   );
 };
 
-export default FavoursPage;
+export default connect(null, { handleModal })(FavoursPage);

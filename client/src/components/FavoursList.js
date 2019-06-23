@@ -29,7 +29,7 @@ const FavoursList = ({ getFavours, favours, favoursCount, favoursLoading }) => {
 
   if (favoursLoading) {
     return <Loader position />;
-  } else if (favours !== null && favours.length !== 0) {
+  } else if (favours && favours !== null && favours.length !== 0) {
     return (
       <Fragment>
         <Pagination

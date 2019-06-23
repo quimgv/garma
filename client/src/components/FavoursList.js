@@ -12,7 +12,7 @@ import { getFavours } from "../redux/actions/favour";
 const FavoursList = ({ getFavours, favours, favoursCount, favoursLoading }) => {
   const favoursPerPage = 2;
 
-  const [limit, setLimit] = useState(favoursPerPage);
+  const [limit] = useState(favoursPerPage);
   const [skip, setSkip] = useState(0);
 
   useEffect(() => {

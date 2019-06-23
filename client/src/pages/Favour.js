@@ -15,11 +15,8 @@ import {
 
 const FavourPage = ({ getCurrentFavour, unmountCurrentFavour, match }) => {
   useEffect(() => {
-    console.log("Favour Item mounted");
     getCurrentFavour(match.params.id);
-
     return () => {
-      console.log("Favour Item unmounted");
       unmountCurrentFavour();
     };
   }, []);

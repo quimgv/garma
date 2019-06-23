@@ -13,7 +13,7 @@ const FavourItem = ({ favour, favourLoading }) => {
   if (favourLoading) {
     return <Loader />;
   } else if (favour) {
-    const { title, description, value } = favour;
+    const { categories, description, difficulty, title, urgency, value } = favour;
     return (
       <Fragment>
         <div className="card mb-4">
@@ -24,7 +24,10 @@ const FavourItem = ({ favour, favourLoading }) => {
             </div>
             <p>{description}</p>
             <p>Value: {value}</p>
-            <FavourStatus />
+            <p>Difficulty: {difficulty}</p>
+            <p>Urgency: {urgency}</p>
+            <p>Status: <FavourStatus /></p>
+            <p>Categories: {categories.map(category => '#' + category)}</p>
             <FavourItemActions />
           </div>
         </div>

@@ -5,7 +5,18 @@ import { Button, Modal } from "react-bootstrap";
 import { connect } from "react-redux";
 import { handleModal } from "../../redux/actions/modal";
 
-const ModalComponent = ({ body, cancelButtonText, confirmButtonText, footer, handleConfirm, handleModal, reduxModal, show, title  }) => {
+const ModalComponent = ({
+  body,
+  cancelButtonText,
+  confirmButtonText,
+  footer,
+  handleConfirm,
+  handleModal,
+  modalName,
+  reduxModal,
+  show,
+  title
+}) => {
   return (
     <Modal show={show || reduxModal.show} onHide={handleModal}>
       <Modal.Header closeButton>
@@ -26,12 +37,15 @@ const ModalComponent = ({ body, cancelButtonText, confirmButtonText, footer, han
           <Button
             variant="primary"
             value={confirmButtonText || reduxModal.confirmButtonText}
-            onClick={handleConfirm || reduxModal.handleConfirm}
+            name={modalName || reduxModal.modalName}
+            onClick={() => handleConfirm()}
           >
             {confirmButtonText || reduxModal.confirmButtonText}
           </Button>
         </Modal.Footer>
-      ) : <div />}
+      ) : (
+        <div />
+      )}
     </Modal>
   );
 };

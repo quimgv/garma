@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 import Loader from "../Common/Loader";
 import OwnAssigned from "../FavourItem/OwnAssignedBadge";
 import FavourStatus from "../FavourItem/FavourStatus";
-import FavourItemActions from '../FavourItem/FavourItemActions';
+import FavourItemActions from './FavourItemActions';
 
 const FavourItem = ({ favour, favourLoading }) => {
   if (favourLoading) {

@@ -1,11 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
-import { Dropdown, DropdownButton, Form } from "react-bootstrap";
+import { Dropdown, DropdownButton } from "react-bootstrap";
 import { isOwner } from "../../utils/helperFunctions";
 
 // Components
 import CreateUpdateFavourForm from "../CreateUpdateFavourForm";
 import Modal from "../Common/Modal";
+import RequestFavourForm from "./RequestFavourForm";
 
 // Redux
 import { connect } from "react-redux";
@@ -18,11 +19,11 @@ const FavourItemActions = ({
   favour,
   handleModal,
   history,
+  modal,
   requestFavour,
   user
 }) => {
   const [dropDownItems, setDropdownItems] = useState();
-  const [requestMessage, setRequestMessage] = useState();
 
   useEffect(() => {
     if (favour && user) {
@@ -31,36 +32,22 @@ const FavourItemActions = ({
   }, [favour, user]);
 
   const editModalContent = {
+    modalName: "editFavour",
     title: "Edit Favour",
     body: <CreateUpdateFavourForm action="edit" />,
     footer: false
   };
 
   const deleteModalContent = {
+    modalName: "deleteFavour",
     title: "Delete Favour",
-    body: "Are you sure?",
-    handleConfirm: () => {
-      deleteFavour(favour._id);
-      handleModal();
-      history.push("/favours");
-    }
+    body: "Are you sure?"
   };
 
   const requestFavourModalContent = {
+    modalName: "requestFavour",
     title: `Request "${favour.title}" Favour`,
-    body: (
-      <Form>
-        <Form.Group>
-          <Form.Label>Why do you want to do this favour?</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows="3"
-            onChange={e => setRequestMessage(e.target.value)}
-          />
-        </Form.Group>
-      </Form>
-    ),
-    footer: false
+    body: <RequestFavourForm />
   };
 
   const setDropdownItemsStart = () => {
@@ -69,11 +56,15 @@ const FavourItemActions = ({
       dropDownItems.push(
         {
           label: "Edit",
-          action: () => handleModal(editModalContent)
+          action: () => {
+            handleModal(editModalContent);
+          }
         },
         {
           label: "Delete",
-          action: () => handleModal(deleteModalContent)
+          action: () => {
+            handleModal(deleteModalContent);
+          }
         }
       );
     }
@@ -89,16 +80,19 @@ const FavourItemActions = ({
     return dropDownItems;
   };
 
-  const handleConfirmRequest = () => {
-    // console.log(requestMessage);
-    requestFavour(favour._id, user._id, favour.owner.user._id, requestMessage);
-    handleModal();
+  const handleConfirm = e => {
+    if (modal.modalName === "deleteFavour") {
+      deleteFavour(favour._id);
+      handleModal();
+      history.push("/favours");
+    }
   };
 
   if (dropDownItems && dropDownItems.length > 0) {
     return (
       <Fragment>
-        <Modal handleConfirm={handleConfirmRequest} />
+        {modal.show && <Modal handleConfirm={handleConfirm} />}
+
         <DropdownButton
           drop="right"
           variant="secondary"
@@ -128,7 +122,8 @@ const FavourItemActions = ({
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  favour: state.favour.currentFavour
+  favour: state.favour.currentFavour,
+  modal: state.modal
 });
 
 export default withRouter(

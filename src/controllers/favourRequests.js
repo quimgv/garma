@@ -3,10 +3,9 @@ const _ = require("lodash");
 
 // Load models
 const FavourRequests = require("../models/favourRequests");
-const Favour = require('../models/favour');
+const Favour = require("../models/favour");
 
 exports.create_favour_request = async (req, res) => {
-    
   // Create favour Request
   const request = new FavourRequests({
     helper: req.body.helperId,
@@ -16,14 +15,17 @@ exports.create_favour_request = async (req, res) => {
   });
 
   try {
-
     // Check if favour status is not Open
     const favour = await Favour.findById(req.params.id);
-    if(!favour) {
-        throw new Error("Favour not found");
+    if (!favour) {
+      return res
+        .status(404)
+        .json({ showErr: { notFound: "Favour not found" } });
     }
-    if(favour.status !== 'Open') {
-        throw new Error("This favour cannot be requested");
+    if (favour.status !== "Open") {
+      return res
+        .status(400)
+        .json({ showErr: { notOpen: "This favour cannot be requested" } });
     }
 
     // Check if this favour has been requested by this user
@@ -32,7 +34,13 @@ exports.create_favour_request = async (req, res) => {
       favour: req.params.id
     });
     if (alreadyRequested.length > 0) {
-      throw new Error("Already requested");
+      return res
+        .status(400)
+        .json({
+          showErr: {
+            alreadyRequested: "This favour has already been requested"
+          }
+        });
     }
     // Save favour request
     await request.save();
@@ -43,10 +51,3 @@ exports.create_favour_request = async (req, res) => {
     res.status(400).json(err.message);
   }
 };
-
-
-
-
-
-
-

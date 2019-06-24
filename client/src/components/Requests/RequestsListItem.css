@@ -1,0 +1,11 @@
+.actions {
+    border-radius: 23px;
+    padding: 5px 5px;
+    border: 1px solid;
+    color: #007bff;
+  }
+  .actions:hover {
+    cursor: pointer;
+    color: white;
+    background-color: #007bff;
+  }

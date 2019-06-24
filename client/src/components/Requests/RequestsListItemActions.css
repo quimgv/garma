@@ -1,0 +1,3 @@
+.dropleft .dropdown-toggle::before {
+  display: none !important;
+}

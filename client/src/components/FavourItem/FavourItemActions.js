@@ -108,7 +108,6 @@ const FavourItemActions = ({
       handleModal();
       history.push("/favours");
     } else if (modal.modalName === "requestBackFavour") {
-      console.log("REQUEST BACK");
       takeRequestBack(requests.myRequest._id)
       handleModal();
     }
@@ -120,7 +119,7 @@ const FavourItemActions = ({
         {modal.show && <Modal handleConfirm={handleConfirm} />}
         <DropdownButton
           drop="right"
-          variant="secondary"
+          variant="primary"
           title="Actions"
           id="dropdown-button-drop-right"
           key="right"

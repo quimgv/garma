@@ -1,9 +1,11 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Col, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 
 // Components
 import FavourItem from "../components/FavourItem/FavourItem";
+import RequestsList from "../components/Requests/RequestsList";
+import Loader from "../components/Common/Loader";
 
 // Redux
 import { connect } from "react-redux";
@@ -14,8 +16,10 @@ import {
 import {
   getFavourRequests,
   unmountRequests,
-  isRequested, setMyRequest
+  isRequested,
+  setMyRequest
 } from "../redux/actions/requests";
+import { isOwner } from "../utils/helperFunctions";
 
 const FavourPage = ({
   favour,
@@ -29,6 +33,7 @@ const FavourPage = ({
   requests,
   user
 }) => {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     getCurrentFavour(match.params.id);
     getFavourRequests(match.params.id);
@@ -50,15 +55,31 @@ const FavourPage = ({
         isRequested(true);
         setMyRequest(request[0]);
       }
+      setLoading(false);
     }
   }, [user, favour, requests]);
-  return (
-    <Row className="justify-content-md-center">
-      <Col lg={8}>
-        <FavourItem />
-      </Col>
-    </Row>
-  );
+
+  if (loading) {
+    return <Loader />;
+  } else {
+    return (
+      <Row className="justify-content-md-center">
+        <Col lg={8}>
+          <FavourItem />
+          {requests.length > 0 && isOwner(favour.owner.user._id, user._id) && (
+            <div className="card mb-4">
+              <div className="card-body">
+                <div className="card-header">
+                  <h5 className="card-title">Requests</h5>
+                </div>
+                <RequestsList />
+              </div>
+            </div>
+          )}
+        </Col>
+      </Row>
+    );
+  }
 };
 
 const mapStateToProps = state => ({

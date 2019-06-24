@@ -1,5 +1,7 @@
 import React, { Fragment } from "react";
 
+import { isOwner } from "../../utils/helperFunctions";
+
 // Redux
 import { connect } from "react-redux";
 
@@ -9,11 +11,11 @@ import OwnAssigned from "../FavourItem/OwnAssignedBadge";
 import FavourStatus from "../FavourItem/FavourStatus";
 import FavourItemActions from './FavourItemActions';
 
-const FavourItem = ({ favour, favourLoading }) => {
+const FavourItem = ({ favour, favourLoading, user }) => {
   if (favourLoading) {
     return <Loader />;
   } else if (favour) {
-    const { categories, description, difficulty, title, urgency, value } = favour;
+    const { categories, description, difficulty, helper, title, urgency, value } = favour;
     return (
       <Fragment>
         <div className="card mb-4">
@@ -28,6 +30,7 @@ const FavourItem = ({ favour, favourLoading }) => {
             <p>Urgency: {urgency}</p>
             <p>Status: <FavourStatus /></p>
             <p>Categories: {categories.map(category => '#' + category)}</p>
+            {helper.user && isOwner(favour.owner.user._id, user._id) && <p>Assigned to: {helper.user.name}</p>}
             <FavourItemActions />
           </div>
         </div>
@@ -40,7 +43,8 @@ const FavourItem = ({ favour, favourLoading }) => {
 
 const mapStateToProps = state => ({
   favour: state.favour.currentFavour,
-  favourLoading: state.favour.loading
+  favourLoading: state.favour.loading,
+  user: state.auth.user
 });
 
 export default connect(mapStateToProps)(FavourItem);

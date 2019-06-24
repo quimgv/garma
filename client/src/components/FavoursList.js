@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { getFavours } from "../redux/actions/favour";
 
 const FavoursList = ({ getFavours, favours, favoursCount, favoursLoading }) => {
-  const favoursPerPage = 2;
+  const favoursPerPage = 5;
 
   const [limit] = useState(favoursPerPage);
   const [skip, setSkip] = useState(0);

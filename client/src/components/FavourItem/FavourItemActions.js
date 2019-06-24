@@ -12,7 +12,7 @@ import RequestFavourForm from "./RequestFavourForm";
 import { connect } from "react-redux";
 import { handleModal } from "../../redux/actions/modal";
 import { deleteFavour } from "../../redux/actions/favour";
-import { requestFavour } from "../../redux/actions/requests";
+import { takeRequestBack } from '../../redux/actions/requests';
 
 const FavourItemActions = ({
   deleteFavour,
@@ -20,16 +20,17 @@ const FavourItemActions = ({
   handleModal,
   history,
   modal,
-  requestFavour,
+  requests,
+  takeRequestBack,
   user
 }) => {
   const [dropDownItems, setDropdownItems] = useState();
 
   useEffect(() => {
-    if (favour && user) {
+    if (favour && user && requests) {
       setDropdownItems(setDropdownItemsStart());
     }
-  }, [favour, user]);
+  }, [favour, user, requests]);
 
   const editModalContent = {
     modalName: "editFavour",
@@ -47,7 +48,14 @@ const FavourItemActions = ({
   const requestFavourModalContent = {
     modalName: "requestFavour",
     title: `Request "${favour.title}" Favour`,
-    body: <RequestFavourForm />
+    body: <RequestFavourForm />,
+    footer: false
+  };
+
+  const takeRequestBackModalContent = {
+    modalName: "requestBackFavour",
+    title: `Request "${favour.title}" Favour`,
+    body: "Are your sure?"
   };
 
   const setDropdownItemsStart = () => {
@@ -68,11 +76,25 @@ const FavourItemActions = ({
         }
       );
     }
-    if (favour.status === "Open" && !isOwner(favour.owner.user._id, user._id)) {
+
+    if (
+      favour.status === "Open" &&
+      !isOwner(favour.owner.user._id, user._id) &&
+      !requests.isRequested
+    ) {
       dropDownItems.push({
         label: "Request favour",
         action: function() {
           handleModal(requestFavourModalContent);
+        }
+      });
+    }
+
+    if (favour.status === "Open" && requests.isRequested && requests.myRequest.status === 'Pending') {
+      dropDownItems.push({
+        label: "Take request back",
+        action: function() {
+          handleModal(takeRequestBackModalContent);
         }
       });
     }
@@ -85,6 +107,10 @@ const FavourItemActions = ({
       deleteFavour(favour._id);
       handleModal();
       history.push("/favours");
+    } else if (modal.modalName === "requestBackFavour") {
+      console.log("REQUEST BACK");
+      takeRequestBack(requests.myRequest._id)
+      handleModal();
     }
   };
 
@@ -92,7 +118,6 @@ const FavourItemActions = ({
     return (
       <Fragment>
         {modal.show && <Modal handleConfirm={handleConfirm} />}
-
         <DropdownButton
           drop="right"
           variant="secondary"
@@ -123,12 +148,13 @@ const FavourItemActions = ({
 const mapStateToProps = state => ({
   user: state.auth.user,
   favour: state.favour.currentFavour,
-  modal: state.modal
+  modal: state.modal,
+  requests: state.requests
 });
 
 export default withRouter(
   connect(
     mapStateToProps,
-    { handleModal, deleteFavour, requestFavour }
+    { handleModal, deleteFavour, takeRequestBack }
   )(FavourItemActions)
 );

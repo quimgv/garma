@@ -8,7 +8,7 @@ const Favour = require("../models/favour");
 exports.create_favour_request = async (req, res) => {
   // Create favour Request
   const request = new FavourRequests({
-    helper: req.body.helperId,
+    helper: req.body.helper,
     favour: req.params.id,
     owner: req.body.owner,
     message: req.body.message
@@ -46,6 +46,31 @@ exports.create_favour_request = async (req, res) => {
     await request.save();
 
     res.status(201).json(request);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
+
+exports.get_favour_requests = async (req, res) => {
+  console.log(req.params.id)
+  try {
+    const requests = await FavourRequests.find({ favour: req.params.id })
+    .populate('helper')
+    .populate('owner')
+    .populate('favour');
+
+    res.status(201).json(requests);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
+
+exports.delete_request = async (req, res) => {
+  try {
+    const request = await FavourRequests.findByIdAndDelete(req.params.id);
+    res.json(request);
   } catch (err) {
     console.log(err);
     res.status(400).json(err.message);

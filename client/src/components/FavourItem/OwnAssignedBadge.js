@@ -14,7 +14,7 @@ const OwnAssigned = ({ favour, user }) => {
           Own
         </Badge>
       );
-    } else if (favour.helper.user && isHelper(favour.helper.user, user._id)) {
+    } else if (favour.helper.user && isHelper(favour.helper.user._id, user._id)) {
       return (
         <Badge pill variant="primary" className="mt-2 mr-2 ownBadge">
           Assigned

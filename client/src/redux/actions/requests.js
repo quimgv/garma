@@ -10,6 +10,8 @@ import {
   SET_MY_REQUEST
 } from "./types";
 
+import { getCurrentFavour } from "./favour";
+
 export const requestFavour = (
   favourId,
   helperId,
@@ -36,7 +38,6 @@ export const getFavourRequests = favourId => async dispatch => {
       type: GET_FAVOUR_REQUESTS,
       payload: res.data
     });
-
   } catch (err) {
     dispatch({ type: GET_FAVOUR_REQUESTS_FAILED });
   }
@@ -54,16 +55,55 @@ export const setMyRequest = request => dispatch => {
     type: SET_MY_REQUEST,
     payload: request
   });
-}
+};
 
-export const takeRequestBack = (requestId) => async dispatch => {
+export const takeRequestBack = requestId => async dispatch => {
   try {
-    const res = await axios.delete('/favourRequests/' + requestId);
+    const res = await axios.delete("/favourRequests/" + requestId);
     dispatch(getFavourRequests(res.data.favour));
     dispatch(setAlert("Request taken back", "success"));
-  } catch(err) {
+  } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }
-}
+};
 
 export const unmountRequests = () => ({ type: UNMOUNT_REQUESTS });
+
+export const acceptRequest = requestId => async dispatch => {
+  try {
+    const res = await axios.patch("/favourRequests/" + requestId, {
+      status: "Accepted"
+    });
+    const favour = await axios.patch("/favour/" + res.data.favour, {
+      status: "In progress",
+      owner: { status: "In progress" },
+      helper: { user: res.data.helper._id, status: "In progress" }
+    });
+    const declineRest = await axios.patch("/favourRequests/updateMany", {
+      action: "declineRestOfRequests",
+      favourId: res.data.favour,
+      requestId,
+      update: { status: "Declined" }
+    });
+    console.log("Request", res.data);
+    console.log("Favour", favour.data);
+    console.log("Decline Rest", declineRest);
+    dispatch(getCurrentFavour(res.data.favour));
+    dispatch(getFavourRequests(res.data.favour));
+    dispatch(setAlert(`${res.data.helper.name}'s request accepted`, "info"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+  }
+};
+
+export const declineRequest = requestId => async dispatch => {
+  try {
+    const res = await axios.patch("/favourRequests/" + requestId, {
+      status: "Declined"
+    });
+    dispatch(getFavourRequests(res.data.favour));
+    dispatch(setAlert(`${res.data.helper.name}'s request declined`, "info"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+  }
+};

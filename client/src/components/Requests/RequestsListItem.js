@@ -13,7 +13,6 @@ import RequestsListItemActions from '../../components/Requests/RequestsListItemA
 import userImage from "../../assets/img/user/undefined.gif";
 
 const RequestsListItem = (request) => {
-    const handleModal = () => {}
   return (
     <Media className="notification-card-one d-flex align-items-center mb-4">
       <div>

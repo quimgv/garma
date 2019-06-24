@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const _ = require("lodash");
 
+const { update_many_requests_filters } = require("./favourRequestsHelpers");
+
 // Load models
 const FavourRequests = require("../models/favourRequests");
 const Favour = require("../models/favour");
@@ -34,13 +36,11 @@ exports.create_favour_request = async (req, res) => {
       favour: req.params.id
     });
     if (alreadyRequested.length > 0) {
-      return res
-        .status(400)
-        .json({
-          showErr: {
-            alreadyRequested: "This favour has already been requested"
-          }
-        });
+      return res.status(400).json({
+        showErr: {
+          alreadyRequested: "This favour has already been requested"
+        }
+      });
     }
     // Save favour request
     await request.save();
@@ -53,12 +53,11 @@ exports.create_favour_request = async (req, res) => {
 };
 
 exports.get_favour_requests = async (req, res) => {
-  console.log(req.params.id)
   try {
     const requests = await FavourRequests.find({ favour: req.params.id })
-    .populate('helper')
-    .populate('owner')
-    .populate('favour');
+      .populate("helper")
+      .populate("owner")
+      .populate("favour");
 
     res.status(201).json(requests);
   } catch (err) {
@@ -71,6 +70,41 @@ exports.delete_request = async (req, res) => {
   try {
     const request = await FavourRequests.findByIdAndDelete(req.params.id);
     res.json(request);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
+
+exports.update_request = async (req, res) => {
+  let updates = req.body;
+
+  try {
+    let request = await FavourRequests.findById(req.params.id);
+
+    if (!request) {
+      res.status(404).json("Request not found");
+    }
+    updates = _.merge(request, updates);
+    const requestUpdate = await FavourRequests.findByIdAndUpdate(
+      req.params.id,
+      updates,
+      { new: true }
+    ).populate("helper");
+    res.json(requestUpdate);
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(err.message);
+  }
+};
+
+exports.update_many_requests = async (req, res) => {
+  // req.body -> update, favourId, requestId, action
+
+  const filters = update_many_requests_filters(req.body);
+  try {
+    let update = await FavourRequests.updateMany(filters, req.body.update);
+    res.json(update);
   } catch (err) {
     console.log(err);
     res.status(400).json(err.message);

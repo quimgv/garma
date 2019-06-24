@@ -11,11 +11,12 @@ import Loader from "../Common/Loader";
 // Redux
 import { connect } from "react-redux";
 import { handleModal } from "../../redux/actions/modal";
+import { acceptRequest, declineRequest } from '../../redux/actions/requests';
 
 // User Images
 import userImage from "../../assets/img/user/undefined.gif";
 
-const FavourItemActions = ({ favour, handleModal, modal, request, user }) => {
+const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal, modal, request, user }) => {
   const [dropDownItems, setDropdownItems] = useState();
   const [loading, setLoading] = useState(true);
 
@@ -60,12 +61,14 @@ const FavourItemActions = ({ favour, handleModal, modal, request, user }) => {
           label: "Accept",
           action: () => {
             console.log("ACCEPT");
+            acceptRequest(request._id);
           }
         },
         {
           label: "Decline",
           action: () => {
             console.log("DECLINE");
+            declineRequest(request._id);
           }
         },
         {
@@ -87,7 +90,6 @@ const FavourItemActions = ({ favour, handleModal, modal, request, user }) => {
     if (dropDownItems && dropDownItems.length > 0) {
       return (
         <Fragment>
-          {console.log(request)}
           {modal.show && <Modal />}
           <DropdownButton
             drop="left"
@@ -126,5 +128,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { handleModal }
+  { acceptRequest, declineRequest, handleModal }
 )(FavourItemActions);

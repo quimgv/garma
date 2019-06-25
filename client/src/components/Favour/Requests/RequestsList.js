@@ -1,7 +1,7 @@
 import React from "react";
 
 // Components
-import RequestsListItem from '../../components/Requests/RequestsListItem';
+import RequestsListItem from './RequestsListItem';
 
 // Redux
 import { connect } from "react-redux";

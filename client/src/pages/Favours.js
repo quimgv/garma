@@ -3,8 +3,8 @@ import { Row, Col, Button } from "react-bootstrap";
 
 // Components
 import Modal from "../components/Common/Modal";
-import CreateUpdateFavourForm from "../components/CreateUpdateFavourForm";
-import FavoursList from "../components/FavoursList";
+import CreateUpdateFavourForm from "../components/Favour/CreateUpdateFavourForm";
+import FavoursList from "../components/Favour/FavoursList";
 
 // Redux
 import { connect } from 'react-redux';

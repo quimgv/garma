@@ -1,14 +1,14 @@
 import React, { Fragment } from "react";
 
-import { isOwner } from "../../utils/helperFunctions";
+import { isOwner } from "../FavourHelpers";
 
 // Redux
 import { connect } from "react-redux";
 
 // Components
-import Loader from "../Common/Loader";
-import OwnAssigned from "../FavourItem/OwnAssignedBadge";
-import FavourStatus from "../FavourItem/FavourStatus";
+import Loader from "../../Common/Loader";
+import OwnAssigned from "./OwnAssignedBadge";
+import FavourStatus from "./FavourStatus";
 import FavourItemActions from './FavourItemActions';
 
 const FavourItem = ({ favour, favourLoading, user }) => {

@@ -3,8 +3,8 @@ import { Col, Row } from "react-bootstrap";
 import { withRouter } from "react-router-dom";
 
 // Components
-import FavourItem from "../components/FavourItem/FavourItem";
-import RequestsList from "../components/Requests/RequestsList";
+import FavourItem from "../components/Favour/FavourItem/FavourItem";
+import RequestsList from "../components/Favour/Requests/RequestsList";
 import Loader from "../components/Common/Loader";
 
 // Redux
@@ -19,7 +19,7 @@ import {
   isRequested,
   setMyRequest
 } from "../redux/actions/requests";
-import { isOwner } from "../utils/helperFunctions";
+import { isOwner } from "../components/Favour/FavourHelpers";
 
 const FavourPage = ({
   favour,

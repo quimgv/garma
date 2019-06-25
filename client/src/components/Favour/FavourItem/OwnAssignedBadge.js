@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
 import "./OwnAssignedBadge.css";
-import { isOwner, isHelper } from "../../utils/helperFunctions";
+import { isOwner, isHelper } from "../FavourHelpers";
 
 // Redux
 import { connect } from "react-redux";

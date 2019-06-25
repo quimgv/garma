@@ -74,23 +74,51 @@ export const getCurrentFavour = favourId => async dispatch => {
 export const unmountCurrentFavour = () => ({ type: UNMOUNT_CURRENT_FAVOUR });
 
 export const editFavour = (favourId, updates) => async dispatch => {
-
   try {
     await axios.patch("/favour/" + favourId, updates);
     dispatch(getCurrentFavour(favourId));
     dispatch(setAlert("Favour updated", "success"));
   } catch (err) {
-    dispatch({ type: GET_CURRENT_FAVOUR_FAILED });
     handleServerErrors(err, dispatch, setAlert);
     console.log(err);
   }
 };
 
-export const deleteFavour = (favourId) => async dispatch => {
-
+export const deleteFavour = favourId => async dispatch => {
   try {
     const res = await axios.delete("/favour/" + favourId);
     dispatch(setAlert(`Favour "${res.data.title}" deleted`, "success"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+    console.log(err);
+  }
+};
+
+export const markAsCompletedHelper = (favourId) => async dispatch => {
+  try {
+    await axios.patch("/favour/" + favourId, {
+      helper: { status: "Completed" }
+    });
+    dispatch(getCurrentFavour(favourId));
+    dispatch(setAlert("Favour marked as completed", "success"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+    console.log(err);
+  }
+};
+
+export const markAsCompletedOwner = (favourId) => async dispatch => {
+  try {
+    await axios.patch("/favour/" + favourId, {
+      helper: { status: "Completed" },
+      owner: { status: "Completed" },
+      status: "Completed"
+    });
+    // Give points to helper
+
+
+    dispatch(getCurrentFavour(favourId));
+    dispatch(setAlert("Favour marked as completed", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
     console.log(err);

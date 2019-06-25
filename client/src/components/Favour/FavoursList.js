@@ -2,12 +2,12 @@ import React, { Fragment, useEffect, useState } from "react";
 
 // Components
 import FavoursListItem from "./FavoursListItem";
-import Loader from "../components/Common/Loader";
-import Pagination from "../components/Common/Pagination";
+import Loader from "../Common/Loader";
+import Pagination from "../Common/Pagination";
 
 // Redux
 import { connect } from "react-redux";
-import { getFavours } from "../redux/actions/favour";
+import { getFavours } from "../../redux/actions/favour";
 
 const FavoursList = ({ getFavours, favours, favoursCount, favoursLoading }) => {
   const favoursPerPage = 5;

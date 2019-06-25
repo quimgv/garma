@@ -1,24 +1,30 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { Dropdown, DropdownButton } from "react-bootstrap";
-import { isOwner } from "../../utils/helperFunctions";
+
+// Helpers
+import { isOwner, isHelper } from "../FavourHelpers";
 
 // Components
 import CreateUpdateFavourForm from "../CreateUpdateFavourForm";
-import Modal from "../Common/Modal";
+import Modal from "../../Common/Modal";
 import RequestFavourForm from "./RequestFavourForm";
 
 // Redux
 import { connect } from "react-redux";
-import { handleModal } from "../../redux/actions/modal";
-import { deleteFavour } from "../../redux/actions/favour";
-import { takeRequestBack } from '../../redux/actions/requests';
+import { handleModal } from "../../../redux/actions/modal";
+import {
+  deleteFavour,
+  markAsCompletedHelper
+} from "../../../redux/actions/favour";
+import { takeRequestBack } from "../../../redux/actions/requests";
 
 const FavourItemActions = ({
   deleteFavour,
   favour,
   handleModal,
   history,
+  markAsCompletedHelper,
   modal,
   requests,
   takeRequestBack,
@@ -58,6 +64,13 @@ const FavourItemActions = ({
     body: "Are your sure?"
   };
 
+  const markAsCompletedHelperModalContent = {
+    modalName: "markAsCompletedHelper",
+    title: `Mark as completed`,
+    body: "Have you finished this favour?",
+    confirmButtonText: "Yes"
+  };
+
   const setDropdownItemsStart = () => {
     let dropDownItems = [];
     if (isOwner(favour.owner.user._id, user._id) && favour.status === "Open") {
@@ -90,11 +103,28 @@ const FavourItemActions = ({
       });
     }
 
-    if (favour.status === "Open" && requests.isRequested && requests.myRequest.status === 'Pending') {
+    if (
+      favour.status === "Open" &&
+      requests.isRequested &&
+      requests.myRequest.status === "Pending"
+    ) {
       dropDownItems.push({
         label: "Take request back",
         action: function() {
           handleModal(takeRequestBackModalContent);
+        }
+      });
+    }
+
+    if (
+      favour.status === "In progress" &&
+      isHelper(favour.helper.user._id, user._id) &&
+      favour.helper.status === "In progress"
+    ) {
+      dropDownItems.push({
+        label: "Mark as Completed Helper",
+        action: function() {
+          handleModal(markAsCompletedHelperModalContent);
         }
       });
     }
@@ -108,7 +138,10 @@ const FavourItemActions = ({
       handleModal();
       history.push("/favours");
     } else if (modal.modalName === "requestBackFavour") {
-      takeRequestBack(requests.myRequest._id)
+      takeRequestBack(requests.myRequest._id);
+      handleModal();
+    } else if (modal.modalName === "markAsCompletedHelper") {
+      markAsCompletedHelper(favour._id);
       handleModal();
     }
   };
@@ -154,6 +187,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { handleModal, deleteFavour, takeRequestBack }
+    { handleModal, deleteFavour, markAsCompletedHelper, takeRequestBack }
   )(FavourItemActions)
 );

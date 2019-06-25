@@ -1,6 +1,6 @@
 import React from "react";
 import { Badge } from "react-bootstrap";
-import { favourStatusVariant } from "../../utils/helperFunctions";
+import { favourStatusVariant } from "../FavourHelpers";
 
 // Redux
 import { connect } from "react-redux";

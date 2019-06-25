@@ -1,20 +1,20 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { Dropdown, DropdownButton, Image, Media } from "react-bootstrap";
 import * as Icon from "react-feather";
-import { isOwner } from "../../utils/helperFunctions";
+import { isOwner } from "../../Favour/FavourHelpers";
 import "./RequestsListItemActions.css";
 
 // Components
-import Modal from "../Common/Modal";
-import Loader from "../Common/Loader";
+import Modal from "../../Common/Modal";
+import Loader from "../../Common/Loader";
 
 // Redux
 import { connect } from "react-redux";
-import { handleModal } from "../../redux/actions/modal";
-import { acceptRequest, declineRequest } from '../../redux/actions/requests';
+import { handleModal } from "../../../redux/actions/modal";
+import { acceptRequest, declineRequest } from '../../../redux/actions/requests';
 
 // User Images
-import userImage from "../../assets/img/user/undefined.gif";
+import userImage from '../../../assets/img/user/undefined.gif';
 
 const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal, modal, request, user }) => {
   const [dropDownItems, setDropdownItems] = useState();

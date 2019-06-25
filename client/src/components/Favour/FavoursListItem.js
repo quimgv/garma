@@ -1,7 +1,7 @@
 import React from "react";
 import { Badge, Card, Container } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { favourStatusVariant } from "../utils/helperFunctions";
+import { favourStatusVariant } from "./FavourHelpers";
 
 const FavoursListItem = ({
   _id,

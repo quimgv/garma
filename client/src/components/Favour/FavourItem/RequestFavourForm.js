@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Button, Form, FormControl, FormGroup } from 'react-bootstrap';
-import isEmpty from "../../validation/isEmpty";
+import isEmpty from "../../../validation/isEmpty";
 
 // Redux
 import { connect } from "react-redux";
-import { requestFavour } from "../../redux/actions/requests";
-import { handleModal } from '../../redux/actions/modal';
+import { requestFavour } from "../../../redux/actions/requests";
+import { handleModal } from '../../../redux/actions/modal';
 
 const RequestFavourForm = ({ favour, handleModal, requestFavour, user }) => {
   const [message, setMessage] = useState();

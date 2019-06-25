@@ -4,11 +4,11 @@ import _ from "lodash";
 
 // Redux
 import { connect } from "react-redux";
-import { createFavour, editFavour } from "../redux/actions/favour";
-import { handleModal } from "../redux/actions/modal";
+import { createFavour, editFavour } from "../../redux/actions/favour";
+import { handleModal } from "../../redux/actions/modal";
 
 // Validation
-import { createFavourValidation } from "../validation/formsValidation";
+import { createFavourValidation } from "../../validation/formsValidation";
 
 const CreateFavourForm = ({
   action,

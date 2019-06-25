@@ -1,16 +1,15 @@
 import React from "react";
 import { Image, Media, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import * as Icon from "react-feather";
 import "./RequestsListItem.css";
 
-import { requestStatusVariant } from '../../utils/helperFunctions';
+import { requestStatusVariant } from './requestsHelpers';
 
 // Components
-import RequestsListItemActions from '../../components/Requests/RequestsListItemActions';
+import RequestsListItemActions from './RequestsListItemActions';
 
 // User Images
-import userImage from "../../assets/img/user/undefined.gif";
+import userImage from '../../../assets/img/user/undefined.gif';
 
 const RequestsListItem = (request) => {
   return (

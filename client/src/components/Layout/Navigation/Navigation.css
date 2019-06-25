@@ -396,3 +396,10 @@
   margin-top: 5px;
 }
 /*# sourceMappingURL=Navigation.css.map */
+
+/* CUSTOM */
+.score {
+  border-bottom: 1px solid;
+  margin: auto 10px auto 0;
+  padding: 2px 2px;
+}

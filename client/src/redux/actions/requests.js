@@ -74,20 +74,17 @@ export const acceptRequest = requestId => async dispatch => {
     const res = await axios.patch("/favourRequests/" + requestId, {
       status: "Accepted"
     });
-    const favour = await axios.patch("/favour/" + res.data.favour, {
+    await axios.patch("/favour/" + res.data.favour, {
       status: "In progress",
       owner: { status: "In progress" },
       helper: { user: res.data.helper._id, status: "In progress" }
     });
-    const declineRest = await axios.patch("/favourRequests/updateMany", {
+    await axios.patch("/favourRequests/updateMany", {
       action: "declineRestOfRequests",
       favourId: res.data.favour,
       requestId,
       update: { status: "Declined" }
     });
-    console.log("Request", res.data);
-    console.log("Favour", favour.data);
-    console.log("Decline Rest", declineRest);
     dispatch(getCurrentFavour(res.data.favour));
     dispatch(getFavourRequests(res.data.favour));
     dispatch(setAlert(`${res.data.helper.name}'s request accepted`, "info"));

@@ -36,6 +36,11 @@ router.get('/me', auth, UsersController.user_profile);
 // @access  Private
 router.patch('/me', auth, upload.single('avatar'), UsersController.update_user_profile);
 
+// @route   PATCH /users/:id
+// @desc    Edit user's profile
+// @access  Private
+router.patch('/:id', auth, upload.single('avatar'), UsersController.update_user_by_id);
+
 // @route   DELETE /users/me
 // @desc    Delete my profile
 // @access  Private

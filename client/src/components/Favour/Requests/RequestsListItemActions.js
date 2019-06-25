@@ -60,14 +60,12 @@ const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal,
         {
           label: "Accept",
           action: () => {
-            console.log("ACCEPT");
             acceptRequest(request._id);
           }
         },
         {
           label: "Decline",
           action: () => {
-            console.log("DECLINE");
             declineRequest(request._id);
           }
         },
@@ -75,7 +73,6 @@ const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal,
           label: "Check request",
           action: () => {
             handleModal(checkRequestModalContent);
-            console.log("CHECK");
           }
         }
       );

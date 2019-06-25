@@ -8,8 +8,9 @@ import {
   UNMOUNT_CURRENT_FAVOUR
 } from "./types";
 
-import { loadUser } from "../actions/auth";
-import { setAlert } from "../actions/alert";
+import { loadUser } from "./auth";
+import { setAlert } from "./alert";
+import { updateUser } from "./user";
 import { handleServerErrors } from "../../utils/helperFunctions";
 
 import axios from "axios";
@@ -94,7 +95,7 @@ export const deleteFavour = favourId => async dispatch => {
   }
 };
 
-export const markAsCompletedHelper = (favourId) => async dispatch => {
+export const markAsCompletedHelper = favourId => async dispatch => {
   try {
     await axios.patch("/favour/" + favourId, {
       helper: { status: "Completed" }
@@ -107,16 +108,20 @@ export const markAsCompletedHelper = (favourId) => async dispatch => {
   }
 };
 
-export const markAsCompletedOwner = (favourId) => async dispatch => {
+export const markAsCompletedOwner = favourId => async dispatch => {
   try {
-    await axios.patch("/favour/" + favourId, {
+    const res = await axios.patch("/favour/" + favourId, {
       helper: { status: "Completed" },
       owner: { status: "Completed" },
       status: "Completed"
     });
+
     // Give points to helper
-
-
+    await dispatch(
+      updateUser(res.data.helper.user._id, {
+        score: res.data.helper.user.score + res.data.value
+      })
+    );
     dispatch(getCurrentFavour(favourId));
     dispatch(setAlert("Favour marked as completed", "success"));
   } catch (err) {

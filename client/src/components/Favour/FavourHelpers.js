@@ -22,3 +22,7 @@ export const isOwner = (favourOwnerId, currentUserId) => {
         return "primary";
     }
   };
+
+  export const favourStatus = (favour, request) => {
+    
+  }

@@ -15,7 +15,8 @@ import { connect } from "react-redux";
 import { handleModal } from "../../../redux/actions/modal";
 import {
   deleteFavour,
-  markAsCompletedHelper
+  markAsCompletedHelper,
+  markAsCompletedOwner
 } from "../../../redux/actions/favour";
 import { takeRequestBack } from "../../../redux/actions/requests";
 
@@ -25,6 +26,7 @@ const FavourItemActions = ({
   handleModal,
   history,
   markAsCompletedHelper,
+  markAsCompletedOwner,
   modal,
   requests,
   takeRequestBack,
@@ -68,6 +70,13 @@ const FavourItemActions = ({
     modalName: "markAsCompletedHelper",
     title: `Mark as completed`,
     body: "Have you finished this favour?",
+    confirmButtonText: "Yes"
+  };
+
+  const markAsCompletedOwnerModalContent = {
+    modalName: "markAsCompletedOwner",
+    title: `Mark as completed`,
+    body: "Has the helper finished this favour?",
     confirmButtonText: "Yes"
   };
 
@@ -116,15 +125,31 @@ const FavourItemActions = ({
       });
     }
 
+    // Mark as completed helper
     if (
       favour.status === "In progress" &&
       isHelper(favour.helper.user._id, user._id) &&
       favour.helper.status === "In progress"
     ) {
       dropDownItems.push({
-        label: "Mark as Completed Helper",
+        label: "Mark as Completed",
         action: function() {
           handleModal(markAsCompletedHelperModalContent);
+        }
+      });
+    }
+
+    // Mark as completed owner
+    if (
+      favour.status === "In progress" &&
+      isOwner(favour.owner.user._id, user._id) &&
+      favour.helper.status !== null &&
+      favour.owner.status !== null
+    ) {
+      dropDownItems.push({
+        label: "Mark as Completed",
+        action: function() {
+          handleModal(markAsCompletedOwnerModalContent);
         }
       });
     }
@@ -142,6 +167,10 @@ const FavourItemActions = ({
       handleModal();
     } else if (modal.modalName === "markAsCompletedHelper") {
       markAsCompletedHelper(favour._id);
+      handleModal();
+    } else if (modal.modalName === "markAsCompletedOwner") {
+      console.log("Completed");
+      markAsCompletedOwner(favour._id);
       handleModal();
     }
   };
@@ -187,6 +216,12 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { handleModal, deleteFavour, markAsCompletedHelper, takeRequestBack }
+    {
+      handleModal,
+      deleteFavour,
+      markAsCompletedHelper,
+      markAsCompletedOwner,
+      takeRequestBack
+    }
   )(FavourItemActions)
 );

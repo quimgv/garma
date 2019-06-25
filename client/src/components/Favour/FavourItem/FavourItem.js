@@ -28,7 +28,7 @@ const FavourItem = ({ favour, favourLoading, user }) => {
             <p>Value: {value}</p>
             <p>Difficulty: {difficulty}</p>
             <p>Urgency: {urgency}</p>
-            <p>Status: <FavourStatus /></p>
+            <FavourStatus />
             <p>Categories: {categories.map(category => '#' + category)}</p>
             {helper.user && isOwner(favour.owner.user._id, user._id) && <p>Assigned to: {helper.user.name}</p>}
             <FavourItemActions />

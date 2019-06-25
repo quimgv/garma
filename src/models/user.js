@@ -44,6 +44,10 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: Buffer,
         default: null
+    },
+    score: {
+        type: Number,
+        default: 10
     }
 },
 {

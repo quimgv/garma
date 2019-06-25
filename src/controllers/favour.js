@@ -100,7 +100,7 @@ exports.update_favour = async (req, res) => {
       req.params.id,
       updates,
       { new: true }
-    );
+    ).populate('helper.user');
     res.json(favourUpdate);
   } catch (err) {
     console.log(err);

@@ -1,8 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Badge } from "react-bootstrap";
+import React from "react";
 import {
-  favourStatus,
-  favourStatusVariant,
   isOwner,
   isHelper
 } from "../FavourHelpers";
@@ -12,7 +9,6 @@ import { connect } from "react-redux";
 import { setAlert } from "../../../redux/actions/alert";
 
 const FavourStatus = ({ favour, user, requests, setAlert }) => {
-  console.log("FAVOURSTATUS", favour, requests);
   let favourStatus;
   if (favour.status === "Open") {
     favourStatus = "Open";

@@ -160,7 +160,7 @@ const favourEight = {
 const setupDatabase = async () => {
     await User.deleteMany()
     await Favour.deleteMany()
-    // await FavourRequest.deleteMany()
+    await FavourRequest.deleteMany()
     await new User(userOne).save()
     await new User(userTwo).save()
     await new User(userThree).save()

@@ -5,7 +5,7 @@ const Footer = () => {
     <Fragment>
       <div className="flex-grow-1" />
       <footer className="footer mt-2">
-        <p>Allrights Reserved @ 2019 React Express Boilerplate API</p>
+        <p>Allrights Reserved @ 2019 Garma</p>
       </footer>
     </Fragment>
   );

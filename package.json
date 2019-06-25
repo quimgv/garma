@@ -1,10 +1,10 @@
 {
-  "name": "react-express-boilerplate",
+  "name": "garma",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "",
+    "start": "node src/index.js",
     "client": "npm start --prefix client",
     "server": "env-cmd ./config/dev.env nodemon src/index.js",
     "dev": "concurrently \"npm run client\" \"npm run server\"",

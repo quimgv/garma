@@ -1,7 +1,12 @@
 import uuid from 'uuid';
 import { SET_ALERT, REMOVE_ALERT, CLEAR_ALERTS } from './types';
 
-export const setAlert = ( msg, alertType, timeout ) => dispatch => {
+export const setAlert = ( msg, alertType, timeout ) => (dispatch, getState) => {
+
+    if(getState().alert.filter(alert => alert.msg === msg).length > 0) {
+        return;
+    }
+
     const id = uuid.v4();
     dispatch({
         type: SET_ALERT,

@@ -13,7 +13,7 @@ const FavourStatus = ({ favour, user, requests, setAlert }) => {
   if (favour.status === "Open") {
     favourStatus = "Open";
     const hasBeenRequested =
-      requests.filter(request => favour._id === request.favour._id).length > 0;
+      requests.filter(request => favour._id === request.favour._id && request.status === 'Pending').length > 0;
     const hasBeenRequestedByUser =
       requests.filter(request => user._id === request.helper._id).length > 0;
     if (isOwner(favour.owner.user._id, user._id) && hasBeenRequested) {

@@ -1,13 +1,12 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { NavDropdown, Image } from "react-bootstrap";
 import * as Icon from "react-feather";
 
 const NavigationLinks = ({ isAuthenticated, logout, user, userImage }) => {
-
   switch (isAuthenticated) {
     case null:
-      return <div></div>;
+      return <div />;
     case false:
       return (
         <div className="qg-menu-links">
@@ -17,29 +16,40 @@ const NavigationLinks = ({ isAuthenticated, logout, user, userImage }) => {
       );
     default:
       return (
-        <NavDropdown
-          title={
-            <div className="menu-profile">
-              <span className="name">{user && user.name}</span>
-              <Image src={user && user.avatar ? `/users/${user._id}/avatar` : userImage} alt="Profile Image" roundedCircle />
-            </div>
-          }
-          id="basic-nav-dropdown"
-          className="profile-nav-item"
-        >
-          <NavLink to="/profile/" className="dropdown-item">
-            <Icon.User className="icon" />
-            Profile
-          </NavLink>
-          <NavLink to="/profile-settings/" className="dropdown-item">
-            <Icon.Settings className="icon" />
-            Settings
-          </NavLink>
-          <NavLink exact to="/" className="dropdown-item" onClick={logout}>
-            <Icon.LogOut className="icon" />
-            Logout
-          </NavLink>
-        </NavDropdown>
+        <Fragment>
+          <div className="score">{user && user.score}</div>
+          <NavDropdown
+            title={
+              <div className="menu-profile">
+                <span className="name">{user && user.name}</span>
+                <Image
+                  src={
+                    user && user.avatar
+                      ? `/users/${user._id}/avatar`
+                      : userImage
+                  }
+                  alt="Profile Image"
+                  roundedCircle
+                />
+              </div>
+            }
+            id="basic-nav-dropdown"
+            className="profile-nav-item"
+          >
+            <NavLink to="/profile/" className="dropdown-item">
+              <Icon.User className="icon" />
+              Profile
+            </NavLink>
+            <NavLink to="/profile-settings/" className="dropdown-item">
+              <Icon.Settings className="icon" />
+              Settings
+            </NavLink>
+            <NavLink exact to="/" className="dropdown-item" onClick={logout}>
+              <Icon.LogOut className="icon" />
+              Logout
+            </NavLink>
+          </NavDropdown>
+        </Fragment>
       );
   }
 };

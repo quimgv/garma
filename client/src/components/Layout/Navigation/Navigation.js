@@ -64,7 +64,6 @@ const Navigation = ({
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto right-nav">
-          <div className="score">{user && user.score}</div>
             <NavigationLinks
               isAuthenticated={isAuthenticated}
               logout={handleLogout}

@@ -45,11 +45,10 @@ export const getFavours = (
   try {
     dispatch(favoursLoading());
     const res = await axios.get(`/favour/${queryParams}`);
+    console.log('AQUI')
 
-    dispatch({
-      type: GET_FAVOURS,
-      payload: res.data
-    });
+    setTimeout(() => dispatch({ type: GET_FAVOURS, payload: res.data }), 1000);
+
   } catch (err) {
     dispatch({ type: GET_FAVOURS_FAILED });
     handleServerErrors(err, dispatch, setAlert);

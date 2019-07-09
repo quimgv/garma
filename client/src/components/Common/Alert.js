@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 const alert = ({ alerts }) => {
     return alerts !== null && alerts.length > 0 && alerts.map(alert => (
-        <Alert dismissible key={alert.id} variant={alert.alertType}>
+        <Alert dismissible={alert.dismissible} key={alert.id} variant={alert.alertType}>
             {alert.msg}
         </Alert>
     ));

@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 const mongoose = require('mongoose')
 const User = require('../../src/models/user')
 const Favour = require('../../src/models/favour')
-// const FavourRequest = require('../../src/models/favourRequests')
+const FavourRequest = require('../../src/models/favourRequests')
 
 ///////////////////
 ////// USERS //////

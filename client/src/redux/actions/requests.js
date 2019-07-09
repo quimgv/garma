@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { setAlert } from "../actions/alert";
+import { clearAlerts, setAlert } from "../actions/alert";
 import { handleServerErrors } from "../../utils/helperFunctions";
 import {
   GET_FAVOUR_REQUESTS,
@@ -61,6 +61,7 @@ export const takeRequestBack = requestId => async dispatch => {
   try {
     const res = await axios.delete("/favourRequests/" + requestId);
     dispatch(getFavourRequests(res.data.favour));
+    dispatch(clearAlerts());
     dispatch(setAlert("Request taken back", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
@@ -87,6 +88,7 @@ export const acceptRequest = requestId => async dispatch => {
     });
     dispatch(getCurrentFavour(res.data.favour));
     dispatch(getFavourRequests(res.data.favour));
+    dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request accepted`, "info"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
@@ -99,6 +101,7 @@ export const declineRequest = requestId => async dispatch => {
       status: "Declined"
     });
     dispatch(getFavourRequests(res.data.favour));
+    dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request declined`, "info"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);

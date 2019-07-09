@@ -1,7 +1,7 @@
 import uuid from 'uuid';
 import { SET_ALERT, REMOVE_ALERT, CLEAR_ALERTS } from './types';
 
-export const setAlert = ( msg, alertType, timeout ) => (dispatch, getState) => {
+export const setAlert = ( msg, alertType, dismissible = true, timeout ) => (dispatch, getState) => {
 
     if(getState().alert.filter(alert => alert.msg === msg).length > 0) {
         return;
@@ -13,7 +13,8 @@ export const setAlert = ( msg, alertType, timeout ) => (dispatch, getState) => {
         payload: { 
             msg, 
             alertType, 
-            id 
+            id,
+            dismissible 
         }
     });
 

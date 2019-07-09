@@ -99,6 +99,7 @@ const FavourItemActions = ({
       );
     }
 
+    // Request favour
     if (
       favour.status === "Open" &&
       !isOwner(favour.owner.user._id, user._id) &&
@@ -112,6 +113,7 @@ const FavourItemActions = ({
       });
     }
 
+    // Take request back
     if (
       favour.status === "Open" &&
       requests.isRequested &&
@@ -128,7 +130,7 @@ const FavourItemActions = ({
     // Mark as completed helper
     if (
       favour.status === "In progress" &&
-      isHelper(favour.helper.user._id, user._id) &&
+      isHelper(favour.helper.user && favour.helper.user._id, user._id) &&
       favour.helper.status === "In progress"
     ) {
       dropDownItems.push({

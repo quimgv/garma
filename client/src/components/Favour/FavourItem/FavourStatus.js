@@ -17,29 +17,31 @@ const FavourStatus = ({ favour, user, requests, setAlert }) => {
     const hasBeenRequestedByUser =
       requests.filter(request => user._id === request.helper._id).length > 0;
     if (isOwner(favour.owner.user._id, user._id) && hasBeenRequested) {
-      setAlert("You have pending requests, waiting for your decision", "info");
+      setAlert("You have pending requests, waiting for your decision", "info", false);
     } else if (hasBeenRequestedByUser) {
-      setAlert("Waiting for owner's favour confirmation", "info");
+      setAlert("Waiting for owner's favour confirmation", "info", false);
     }
   } else if (favour.status === "In progress") {
     favourStatus = "In progress";
     if (isOwner(favour.owner.user._id, user._id)) {
-      setAlert("Waiting for helper to complete the favour", "info");
+      setAlert("Waiting for helper to complete the favour", "info", false);
       if (favour.helper.status === "Completed") {
         setAlert(
           "Waiting for you to confirm that the favour is completed",
-          "info"
+          "info",
+          false
         );
       }
     } else if (
       favour.helper.user &&
       isHelper(favour.helper.user._id, user._id)
     ) {
-      setAlert("Waiting for you to complete the favour", "info");
+      setAlert("Waiting for you to complete the favour", "info", false);
       if (favour.helper.status === "Completed") {
         setAlert(
           "Waiting for the owner to confirm that the favour is completed",
-          "info"
+          "info",
+          false
         );
       }
     }

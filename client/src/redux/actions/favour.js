@@ -9,7 +9,7 @@ import {
 } from "./types";
 
 import { loadUser } from "./auth";
-import { setAlert } from "./alert";
+import { clearAlerts, setAlert } from "./alert";
 import { updateUser } from "./user";
 import { handleServerErrors } from "../../utils/helperFunctions";
 
@@ -99,6 +99,7 @@ export const markAsCompletedHelper = favourId => async dispatch => {
       helper: { status: "Completed" }
     });
     dispatch(getCurrentFavour(favourId));
+    dispatch(clearAlerts());
     dispatch(setAlert("Favour marked as completed", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
@@ -121,6 +122,7 @@ export const markAsCompletedOwner = favourId => async dispatch => {
       })
     );
     dispatch(getCurrentFavour(favourId));
+    dispatch(clearAlerts());
     dispatch(setAlert("Favour marked as completed", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);

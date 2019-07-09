@@ -22,6 +22,10 @@ const SideMenu = ({ sideMenu }) => {
               <Icon.ChevronRight className="icon" />
               <span className="title">Favours</span>
             </NavLink>
+            <NavLink to="/requests/" className="nav-link">
+              <Icon.ChevronRight className="icon" />
+              <span className="title">Requests</span>
+            </NavLink>
           </Nav>
         </Navbar.Collapse>
       </Navbar>

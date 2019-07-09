@@ -10,6 +10,7 @@ import Home from '../pages/Home';
 import Dashboard from '../pages/Dashboard';
 import Favours from '../pages/Favours';
 import Favour from '../pages/Favour';
+import FavourRequestsPage from '../pages/FavourRequestsPage';
 import Signup from '../pages/Signup';
 import Login from '../pages/Login';
 import ForgotPassword from '../pages/ForgotPassword';
@@ -46,6 +47,7 @@ const AppRouter = () => {
                 <PrivateRoute path="/dashboard/" exact component={Dashboard} />
                 <PrivateRoute path="/favours/" component={Favours} />
                 <PrivateRoute path="/favour/:id" component={Favour} />
+                <PrivateRoute path="/requests/" exact component={FavourRequestsPage} />
                 <PrivateRoute path="/profile/" component={Profile} />
                 <PrivateRoute path="/profile-settings/" component={ProfileSettings} />
                 <Route path="/signup/" render={props => <Signup {...props} />} />

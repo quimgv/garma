@@ -1,7 +1,7 @@
 import {
-  GET_FAVOUR_REQUESTS,
+  GET_REQUESTS,
   REQUESTS_LOADING,
-  GET_FAVOUR_REQUESTS_FAILED,
+  GET_REQUESTS_FAILED,
   UNMOUNT_REQUESTS,
   IS_REQUESTED,
   SET_MY_REQUEST
@@ -21,7 +21,7 @@ export default function(state = inistialState, action) {
         ...state,
         loading: true
       };
-    case GET_FAVOUR_REQUESTS:
+    case GET_REQUESTS:
       return {
         ...state,
         requests: [...payload],
@@ -37,7 +37,7 @@ export default function(state = inistialState, action) {
         ...state,
         isRequested: payload
       };
-    case GET_FAVOUR_REQUESTS_FAILED:
+    case GET_REQUESTS_FAILED:
     case UNMOUNT_REQUESTS:
       return inistialState;
     default:

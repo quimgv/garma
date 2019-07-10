@@ -14,7 +14,7 @@ import {
   unmountCurrentFavour
 } from "../redux/actions/favour";
 import {
-  getFavourRequests,
+  getRequests,
   unmountRequests,
   isRequested,
   setMyRequest
@@ -24,7 +24,7 @@ import { isOwner } from "../components/Favour/FavourHelpers";
 const FavourPage = ({
   favour,
   getCurrentFavour,
-  getFavourRequests,
+  getRequests,
   isRequested,
   setMyRequest,
   unmountCurrentFavour,
@@ -36,7 +36,7 @@ const FavourPage = ({
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     getCurrentFavour(match.params.id);
-    getFavourRequests(match.params.id);
+    getRequests(match.params.id);
     return () => {
       unmountCurrentFavour();
       unmountRequests();
@@ -93,7 +93,7 @@ export default withRouter(
     mapStateToProps,
     {
       getCurrentFavour,
-      getFavourRequests,
+      getRequests,
       isRequested,
       setMyRequest,
       unmountCurrentFavour,

@@ -6,26 +6,30 @@ import "./RequestsListItemActions.css";
 
 // Components
 import Modal from "../../Common/Modal";
-import Loader from "../../Common/Loader";
 
 // Redux
 import { connect } from "react-redux";
 import { handleModal } from "../../../redux/actions/modal";
-import { acceptRequest, declineRequest } from '../../../redux/actions/requests';
+import { acceptRequest, declineRequest } from "../../../redux/actions/requests";
 
 // User Images
-import userImage from '../../../assets/img/user/undefined.gif';
+import userImage from "../../../assets/img/user/undefined.gif";
 
-const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal, modal, request, user }) => {
+const FavourItemActions = ({
+  acceptRequest,
+  declineRequest,
+  handleModal,
+  modal,
+  request,
+  user
+}) => {
   const [dropDownItems, setDropdownItems] = useState();
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (favour && user && request) {
+    if (user && request) {
       setDropdownItems(setDropdownItemsStart());
-      setLoading(false);
     }
-  }, [favour, user, request]);
+  }, [user, request]);
 
   const checkRequestModalContent = {
     modalName: "checkRequest",
@@ -41,9 +45,7 @@ const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal,
           thumbnail
         />
         <Media.Body className="ml-4">
-          <p>
-            {request.message}
-          </p>
+          <p>{request.message}</p>
         </Media.Body>
       </Media>
     ),
@@ -53,7 +55,7 @@ const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal,
   const setDropdownItemsStart = () => {
     let dropDownItems = [];
     if (
-      isOwner(favour.owner.user._id, user._id) &&
+      isOwner(request.favour.owner.user, user._id) &&
       request.status === "Pending"
     ) {
       dropDownItems.push(
@@ -81,44 +83,39 @@ const FavourItemActions = ({ acceptRequest, declineRequest, favour, handleModal,
     return dropDownItems;
   };
 
-  if (loading) {
-    return <Loader />;
+  if (dropDownItems && dropDownItems.length > 0) {
+    return (
+      <Fragment>
+        {modal.show && <Modal />}
+        <DropdownButton
+          drop="left"
+          variant="primary"
+          title={<Icon.Menu className="icon mt-minus-3" size={20} />}
+          id="dropdown-button-drop-left"
+          key="left"
+          className="mr-2 mt-2"
+        >
+          {dropDownItems.map((dropDownItem, idx) => {
+            return (
+              <Dropdown.Item
+                key={idx}
+                eventKey={dropDownItem.label}
+                onClick={dropDownItem.action}
+              >
+                {dropDownItem.label}
+              </Dropdown.Item>
+            );
+          })}
+        </DropdownButton>
+      </Fragment>
+    );
   } else {
-    if (dropDownItems && dropDownItems.length > 0) {
-      return (
-        <Fragment>
-          {modal.show && <Modal />}
-          <DropdownButton
-            drop="left"
-            variant="primary"
-            title={<Icon.Menu className="icon mt-minus-3" size={20} />}
-            id="dropdown-button-drop-left"
-            key="left"
-            className="mr-2 mt-2"
-          >
-            {dropDownItems.map((dropDownItem, idx) => {
-              return (
-                <Dropdown.Item
-                  key={idx}
-                  eventKey={dropDownItem.label}
-                  onClick={dropDownItem.action}
-                >
-                  {dropDownItem.label}
-                </Dropdown.Item>
-              );
-            })}
-          </DropdownButton>
-        </Fragment>
-      );
-    } else {
-      return <div />;
-    }
+    return <div />;
   }
 };
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  favour: state.favour.currentFavour,
   modal: state.modal,
   requests: state.requests
 });

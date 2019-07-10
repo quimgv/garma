@@ -46,7 +46,7 @@ export const getFavours = (
     dispatch(favoursLoading());
     const res = await axios.get(`/favour/${queryParams}`);
 
-    setTimeout(() => dispatch({ type: GET_FAVOURS, payload: res.data }), 1000);
+    setTimeout(() => dispatch({ type: GET_FAVOURS, payload: res.data }), 600);
 
   } catch (err) {
     dispatch({ type: GET_FAVOURS_FAILED });

@@ -3,11 +3,12 @@ import axios from "axios";
 import { clearAlerts, setAlert } from "../actions/alert";
 import { handleServerErrors } from "../../utils/helperFunctions";
 import {
-  GET_FAVOUR_REQUESTS,
-  GET_FAVOUR_REQUESTS_FAILED,
+  GET_REQUESTS,
+  GET_REQUESTS_FAILED,
   UNMOUNT_REQUESTS,
   IS_REQUESTED,
-  SET_MY_REQUEST
+  SET_MY_REQUEST,
+  REQUESTS_LOADING
 } from "./types";
 
 import { getCurrentFavour } from "./favour";
@@ -19,27 +20,45 @@ export const requestFavour = (
   message
 ) => async dispatch => {
   try {
-    await axios.post(`/favourRequests/${favourId}`, {
+    await axios.post(`/favour/requests/${favourId}`, {
       helper: helperId,
       owner: ownerId,
       message
     });
-    dispatch(getFavourRequests(favourId));
+    dispatch(getRequests(favourId));
     dispatch(setAlert("Favour requested", "success"));
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }
 };
 
-export const getFavourRequests = favourId => async dispatch => {
+export const getRequests = (
+  favourId,
+  userId,
+  requestFilter
+) => async dispatch => {
+  let requests;
+
   try {
-    const res = await axios.get(`/favourRequests/favour/${favourId}`);
-    dispatch({
-      type: GET_FAVOUR_REQUESTS,
-      payload: res.data
-    });
+    if (favourId) {
+      requests = await axios.get(`/favour/requests/${favourId}/favour`);
+    } else if (requestFilter === "received") {
+      requests = await axios.get(`/favour/requests/${userId}/owner`);
+    } else if (requestFilter === "sent") {
+      requests = await axios.get(`/favour/requests/${userId}/helper`);
+    } else {
+      requests = await axios.get(`/favour/requests/${userId}/user`);
+    }
+    dispatch({ type: REQUESTS_LOADING });
+
+    setTimeout(() => {
+      dispatch({
+        type: GET_REQUESTS,
+        payload: requests.data
+      });
+    }, 600);
   } catch (err) {
-    dispatch({ type: GET_FAVOUR_REQUESTS_FAILED });
+    dispatch({ type: GET_REQUESTS_FAILED });
   }
 };
 
@@ -59,8 +78,8 @@ export const setMyRequest = request => dispatch => {
 
 export const takeRequestBack = requestId => async dispatch => {
   try {
-    const res = await axios.delete("/favourRequests/" + requestId);
-    dispatch(getFavourRequests(res.data.favour));
+    const res = await axios.delete("/favour/requests/" + requestId);
+    dispatch(getRequests(res.data.favour));
     dispatch(clearAlerts());
     dispatch(setAlert("Request taken back", "success"));
   } catch (err) {
@@ -72,22 +91,29 @@ export const unmountRequests = () => ({ type: UNMOUNT_REQUESTS });
 
 export const acceptRequest = requestId => async dispatch => {
   try {
-    const res = await axios.patch("/favourRequests/" + requestId, {
+    // Set request as accepted
+    const res = await axios.patch("/favour/requests/" + requestId, {
       status: "Accepted"
     });
+
+    // Set helper as helper of the favour and status in progress
     await axios.patch("/favour/" + res.data.favour, {
       status: "In progress",
       owner: { status: "In progress" },
       helper: { user: res.data.helper._id, status: "In progress" }
     });
-    await axios.patch("/favourRequests/updateMany", {
+
+    // Set rest of requests as declined
+    await axios.patch("/favour/requests/updateMany", {
       action: "declineRestOfRequests",
       favourId: res.data.favour,
       requestId,
       update: { status: "Declined" }
     });
+
+    // Display new content & alerts
     dispatch(getCurrentFavour(res.data.favour));
-    dispatch(getFavourRequests(res.data.favour));
+    dispatch(getRequests(res.data.favour));
     dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request accepted`, "info"));
   } catch (err) {
@@ -97,10 +123,13 @@ export const acceptRequest = requestId => async dispatch => {
 
 export const declineRequest = requestId => async dispatch => {
   try {
-    const res = await axios.patch("/favourRequests/" + requestId, {
+    // Set request as declined
+    const res = await axios.patch("/favour/requests/" + requestId, {
       status: "Declined"
     });
-    dispatch(getFavourRequests(res.data.favour));
+
+    // Display new content & alerts
+    dispatch(getRequests(res.data.favour));
     dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request declined`, "info"));
   } catch (err) {

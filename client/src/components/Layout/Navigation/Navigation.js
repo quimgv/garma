@@ -1,7 +1,8 @@
 import React from "react";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, NavLink } from "react-router-dom";
 import "./Navigation.css";
-import { Navbar, Nav, Image } from "react-bootstrap";
+import { Image, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import * as Icon from 'react-feather';
 import PropTypes from "prop-types";
 
 // Components
@@ -64,6 +65,41 @@ const Navigation = ({
 
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="ml-auto right-nav">
+            <NavDropdown
+              title={
+                <div className="count-info">
+                  <Icon.Bell className="icon" />
+                  <span className="ci-number">
+                    <span className="ripple" />
+                    <span className="ripple" />
+                    <span className="ripple" />
+                  </span>
+                </div>
+              }
+              id="basic-nav-dropdown"
+              className="message-box"
+            >
+              <NavLink to="#" className="dropdown-item">
+                <div className="message-item">
+                  <span className="user-pic">
+                    <Image src={userImage} alt="User Image" roundedCircle />
+                    <span className="profile-status online" />
+                  </span>
+
+                  <span className="chat-content">
+                    <h5 className="message-title">Aaron Rossi</h5>
+                    <span className="mail-desc">Just sent a new comment!</span>
+                  </span>
+                  <span className="time">0 seconds ago</span>
+                </div>
+              </NavLink>
+
+
+              <Link to="/notifications/" className="dropdown-item">
+                Check all notifications
+                <Icon.ChevronRight className="icon" />
+              </Link>
+            </NavDropdown>
             <NavigationLinks
               isAuthenticated={isAuthenticated}
               logout={handleLogout}

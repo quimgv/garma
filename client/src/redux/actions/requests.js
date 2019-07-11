@@ -20,7 +20,7 @@ export const requestFavour = (
   message
 ) => async dispatch => {
   try {
-    await axios.post(`/favour/requests/${favourId}`, {
+    await axios.post(`/favourRequests/${favourId}`, {
       helper: helperId,
       owner: ownerId,
       message
@@ -37,18 +37,23 @@ export const getRequests = (
   userId,
   requestFilter
 ) => async dispatch => {
-  let requests;
+
+  let filters = '';
+
+    if(favourId || userId) filters = '?';
+
+    if (favourId) {
+      filters += 'favour=' + favourId;
+    } else if (requestFilter === "received") {
+      filters += 'owner=' + userId;
+    } else if (requestFilter === "sent") {
+      filters += 'helper=' + userId;
+    } 
 
   try {
-    if (favourId) {
-      requests = await axios.get(`/favour/requests/${favourId}/favour`);
-    } else if (requestFilter === "received") {
-      requests = await axios.get(`/favour/requests/${userId}/owner`);
-    } else if (requestFilter === "sent") {
-      requests = await axios.get(`/favour/requests/${userId}/helper`);
-    } else {
-      requests = await axios.get(`/favour/requests/${userId}/user`);
-    }
+
+    const requests = await axios.get(`/favourRequests/${filters}`);
+
     dispatch({ type: REQUESTS_LOADING });
 
     setTimeout(() => {
@@ -78,7 +83,7 @@ export const setMyRequest = request => dispatch => {
 
 export const takeRequestBack = requestId => async dispatch => {
   try {
-    const res = await axios.delete("/favour/requests/" + requestId);
+    const res = await axios.delete("/favourRequests/" + requestId);
     dispatch(getRequests(res.data.favour));
     dispatch(clearAlerts());
     dispatch(setAlert("Request taken back", "success"));
@@ -92,7 +97,7 @@ export const unmountRequests = () => ({ type: UNMOUNT_REQUESTS });
 export const acceptRequest = requestId => async dispatch => {
   try {
     // Set request as accepted
-    const res = await axios.patch("/favour/requests/" + requestId, {
+    const res = await axios.patch("/favourRequests/" + requestId, {
       status: "Accepted"
     });
 
@@ -104,7 +109,7 @@ export const acceptRequest = requestId => async dispatch => {
     });
 
     // Set rest of requests as declined
-    await axios.patch("/favour/requests/updateMany", {
+    await axios.patch("/favourRequests/updateMany", {
       action: "declineRestOfRequests",
       favourId: res.data.favour,
       requestId,
@@ -124,7 +129,7 @@ export const acceptRequest = requestId => async dispatch => {
 export const declineRequest = requestId => async dispatch => {
   try {
     // Set request as declined
-    const res = await axios.patch("/favour/requests/" + requestId, {
+    const res = await axios.patch("/favourRequests/" + requestId, {
       status: "Declined"
     });
 
@@ -132,6 +137,27 @@ export const declineRequest = requestId => async dispatch => {
     dispatch(getRequests(res.data.favour));
     dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request declined`, "info"));
+  } catch (err) {
+    handleServerErrors(err, dispatch, setAlert);
+  }
+};
+
+export const readRequests = () => async (dispatch, getState) => {
+  let requestsId = [];
+  const requestsUnread = getState().requests.requests.filter(
+    request => request.read === false && request.owner._id === getState().auth.user._id
+  );
+  for (let request of requestsUnread) {
+    requestsId.push(request._id);
+  }
+
+  try {
+    // Set unread requests as read
+    await axios.patch("/favourRequests/updateMany", {
+      action: "setUnreadRequestsAsRead",
+      requestsId,
+      update: { read: true }
+    });
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }

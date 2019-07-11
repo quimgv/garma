@@ -18,7 +18,8 @@ app.use(cors());
 
 app.use('/users', userRouter);
 app.use('/favour', favourRouter);
-app.use('/favour/requests', favourRequests);
+app.use('/favourRequests', favourRequests);
+
 
 // Dummy Data
 // setupDatabase()

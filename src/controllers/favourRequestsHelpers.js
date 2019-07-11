@@ -7,6 +7,11 @@ exports.update_many_requests_filters = body => {
       _id: { $ne: body.requestId }
     };
   }
+  if(body.action === 'setUnreadRequestsAsRead') {
+    filters = {
+      _id: { $in: body.requestsId }
+    }
+  }
 
   return filters;
 };

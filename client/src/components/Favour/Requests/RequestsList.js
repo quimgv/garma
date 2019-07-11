@@ -7,12 +7,17 @@ import Loader from "../../Common/Loader";
 
 // Redux
 import { connect } from "react-redux";
-import { getRequests, unmountRequests } from "../../../redux/actions/requests";
+import {
+  getRequests,
+  unmountRequests,
+  readRequests
+} from "../../../redux/actions/requests";
 
 const RequestsList = ({
   getRequests,
   isLoading,
   match,
+  readRequests,
   requests,
   requestFilter,
   unmountRequests,
@@ -22,11 +27,14 @@ const RequestsList = ({
   const requestFilterReq = requestFilter ? requestFilter : null;
 
   useEffect(() => {
-    getRequests(favourURLId, user && user._id, requestFilterReq);
-    return () => {
-      unmountRequests();
-    };
-  }, [requestFilter]);
+    if (user) {
+      getRequests(favourURLId, user._id, requestFilterReq);
+    }
+  }, [requestFilter, user]);
+
+  useEffect(() => {
+    readRequests();
+  }, [requests]);
 
   if (isLoading) {
     return <Loader position />;
@@ -52,6 +60,6 @@ const mapStateToProps = state => ({
 export default withRouter(
   connect(
     mapStateToProps,
-    { getRequests, unmountRequests }
+    { getRequests, readRequests, unmountRequests }
   )(RequestsList)
 );

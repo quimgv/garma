@@ -55,49 +55,20 @@ exports.create_favour_request = async (req, res) => {
 exports.get_requests = async (req, res) => {
   let filters = {};
 
+  for (let key in req.query) {
+    if (req.query[key].includes(",")) {
+      filters[key] = { $in: req.query.helper.split(",") };
+    } else {
+      filters[key] = req.query[key];
+    }
+  }
+
   try {
     const requests = await FavourRequests.find(filters)
       .populate("helper")
       .populate("owner")
       .populate("favour");
-    if (requests.length === 0) {
-      throw new Error("There are no requests.");
-    }
     res.json(requests);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err.message);
-  }
-};
-
-exports.get_favour_requests = async (req, res) => {
-  try {
-    const requests = await FavourRequests.find({ favour: req.params.id })
-      .populate("helper")
-      .populate("owner")
-      .populate("favour");
-
-    res.status(201).json(requests);
-  } catch (err) {
-    console.log(err);
-    res.status(400).json(err.message);
-  }
-};
-
-exports.get_user_requests = async (req, res) => {
-  let query = {};
-  if (req.url.includes("owner")) {
-    query = { owner: req.params.id };
-  } else if (req.url.includes("helper")) {
-    query = { helper: req.params.id };
-  }
-
-  try {
-    const requests = await FavourRequests.find(query)
-      .populate("helper")
-      .populate("owner")
-      .populate("favour");
-    res.status(201).json(requests);
   } catch (err) {
     console.log(err);
     res.status(400).json(err.message);
@@ -114,9 +85,9 @@ exports.delete_request = async (req, res) => {
   }
 };
 
-exports.delete_all_favour_requests = async (req, res) => {
+exports.delete_many_requests = async (req, res) => {
   try {
-    const requests = await FavourRequests.deleteMany({ favour: req.params.id });
+    const requests = await FavourRequests.deleteMany(req.query);
     res.json(requests);
   } catch (err) {
     console.log(err);

@@ -24,6 +24,10 @@ const favourRequestsSchema = new mongoose.Schema({
     show: {
         type: Boolean,
         default: true
+    },
+    read: {
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true

@@ -44,6 +44,30 @@ const userThree = {
     }]
 }
 
+const userFourID = new mongoose.Types.ObjectId()
+const userFour = {
+    _id: userFourID,
+    name: 'Yago',
+    email: 'yago@test.com',
+    password: 'test123',
+    score: 60,
+    tokens: [{
+        token: jwt.sign({ _id: userFourID }, process.env.JWT_SECRET)
+    }]
+}
+
+const userFiveID = new mongoose.Types.ObjectId()
+const userFive = {
+    _id: userFiveID,
+    name: 'Marci',
+    email: 'marci@test.com',
+    password: 'test123',
+    score: 60,
+    tokens: [{
+        token: jwt.sign({ _id: userFiveID }, process.env.JWT_SECRET)
+    }]
+}
+
 //////////////////////
 ////// FAVOURS ///////
 //////////////////////
@@ -164,6 +188,8 @@ const setupDatabase = async () => {
     await new User(userOne).save()
     await new User(userTwo).save()
     await new User(userThree).save()
+    await new User(userFour).save()
+    await new User(userFive).save()
     await new Favour(favourOne).save()
     await new Favour(favourTwo).save()
     await new Favour(favourThree).save()

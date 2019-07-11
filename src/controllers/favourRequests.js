@@ -54,13 +54,27 @@ exports.create_favour_request = async (req, res) => {
 
 exports.get_requests = async (req, res) => {
   let filters = {};
+  let op = '$or';
 
   for (let key in req.query) {
-    if (req.query[key].includes(",")) {
-      filters[key] = { $in: req.query.helper.split(",") };
+    if (key === "op") {
+      op = req.query[key];
     } else {
-      filters[key] = req.query[key];
+      if (req.query[key].includes(",")) {
+        filters[key] = { $in: req.query.helper.split(",") };
+      } else {
+        filters[key] = req.query[key];
+      }
     }
+  }
+
+  if (Object.keys(filters).length > 1) {
+    let newFilters = [];
+    for (let key in filters) {
+      newFilters.push({ [key]: filters[key] });
+    }
+    filters = { [op]: newFilters };
+  } else {
   }
 
   try {

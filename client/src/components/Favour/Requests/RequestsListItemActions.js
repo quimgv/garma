@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from "react";
+import { withRouter } from "react-router-dom";
 import { Dropdown, DropdownButton, Image, Media } from "react-bootstrap";
 import * as Icon from "react-feather";
 import { isOwner } from "../../Favour/FavourHelpers";
@@ -10,15 +11,25 @@ import Modal from "../../Common/Modal";
 // Redux
 import { connect } from "react-redux";
 import { handleModal } from "../../../redux/actions/modal";
-import { acceptRequest, declineRequest } from "../../../redux/actions/requests";
+import {
+  acceptRequest,
+  checkPendingRequests,
+  declineRequest,
+  getRequests
+} from "../../../redux/actions/requests";
+import { getCurrentFavour } from "../../../redux/actions/favour";
 
 // User Images
 import userImage from "../../../assets/img/user/undefined.gif";
 
 const FavourItemActions = ({
   acceptRequest,
+  checkPendingRequests,
   declineRequest,
+  getCurrentFavour,
+  getRequests,
   handleModal,
+  match,
   modal,
   request,
   user
@@ -62,13 +73,13 @@ const FavourItemActions = ({
         {
           label: "Accept",
           action: () => {
-            acceptRequest(request._id);
+            acceptRequest(request._id, match.path);
           }
         },
         {
           label: "Decline",
           action: () => {
-            declineRequest(request._id);
+            declineRequest(request._id, match.path);
           }
         },
         {
@@ -120,7 +131,16 @@ const mapStateToProps = state => ({
   requests: state.requests
 });
 
-export default connect(
-  mapStateToProps,
-  { acceptRequest, declineRequest, handleModal }
-)(FavourItemActions);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {
+      acceptRequest,
+      checkPendingRequests,
+      declineRequest,
+      getCurrentFavour,
+      getRequests,
+      handleModal
+    }
+  )(FavourItemActions)
+);

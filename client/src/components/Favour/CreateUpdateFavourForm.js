@@ -88,7 +88,6 @@ const CreateFavourForm = ({
           isChecked: true
         });
       });
-      console.log(_.merge(categoriesControl, categoriesToFill));
     }
 
     if (favour) {
@@ -107,8 +106,6 @@ const CreateFavourForm = ({
 
   const handleSubmit = e => {
     e.preventDefault();
-
-    console.log(e.target.attributes.getNamedItem("action").value);
 
     const action = e.target.attributes.getNamedItem("action").value;
 
@@ -184,7 +181,6 @@ const CreateFavourForm = ({
 
   return (
     <div>
-      {console.log(formData)}
       <Form>
         <Form.Group>
           <Form.Label>Favour Title</Form.Label>

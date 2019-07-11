@@ -1,8 +1,7 @@
 import React from "react";
-import { withRouter, Link, NavLink } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 import "./Navigation.css";
-import { Image, Nav, Navbar, NavDropdown } from "react-bootstrap";
-import * as Icon from "react-feather";
+import { Image, Nav, Navbar } from "react-bootstrap";
 import PropTypes from "prop-types";
 
 // Components

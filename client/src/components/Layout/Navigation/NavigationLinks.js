@@ -3,7 +3,16 @@ import { Link, NavLink } from "react-router-dom";
 import { NavDropdown, Image } from "react-bootstrap";
 import * as Icon from "react-feather";
 
-const NavigationLinks = ({ isAuthenticated, logout, user, userImage }) => {
+// Redux
+import { connect } from "react-redux";
+
+const NavigationLinks = ({
+  isAuthenticated,
+  logout,
+  pendingRequests,
+  user,
+  userImage
+}) => {
   switch (isAuthenticated) {
     case null:
       return <div />;
@@ -18,40 +27,27 @@ const NavigationLinks = ({ isAuthenticated, logout, user, userImage }) => {
       return (
         <Fragment>
           <NavDropdown
+            disabled={!pendingRequests}
             title={
-              <div className="count-info">
+              <div className="count-info mr-2">
                 <Icon.Bell className="icon" />
-                <span className="ci-number">
+                {pendingRequests && <span className="ci-number">
                   <span className="ripple" />
                   <span className="ripple" />
                   <span className="ripple" />
-                </span>
+                </span>}
               </div>
             }
             id="basic-nav-dropdown"
             className="message-box"
           >
-            <NavLink to="#" className="dropdown-item">
-              <div className="message-item">
-                <span className="user-pic">
-                  <Image src={userImage} alt="User Image" roundedCircle />
-                  <span className="profile-status online" />
-                </span>
-
-                <span className="chat-content">
-                  <h5 className="message-title">Aaron Rossi</h5>
-                  <span className="mail-desc">Just sent a new comment!</span>
-                </span>
-                <span className="time">0 seconds ago</span>
-              </div>
-            </NavLink>
-
-            <Link to="/notifications/" className="dropdown-item">
-              Check all notifications
+            <Link to="/requests/" className="dropdown-item">
+              You have requests pending to respond
               <Icon.ChevronRight className="icon" />
             </Link>
           </NavDropdown>
-          <div className="score">{user && user.score}</div>
+
+          {user && <div className="score">{user.score}</div>}
           <NavDropdown
             title={
               <div className="menu-profile">
@@ -88,4 +84,8 @@ const NavigationLinks = ({ isAuthenticated, logout, user, userImage }) => {
   }
 };
 
-export default NavigationLinks;
+const mapStateToProps = state => ({
+  pendingRequests: state.requests.pendingRequests
+});
+
+export default connect(mapStateToProps)(NavigationLinks);

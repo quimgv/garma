@@ -8,7 +8,9 @@ import {
   UNMOUNT_REQUESTS,
   IS_REQUESTED,
   SET_MY_REQUEST,
-  REQUESTS_LOADING
+  REQUESTS_LOADING,
+  CHECK_PENDING_REQUESTS,
+  CHECK_PENDING_REQUESTS_FAILED
 } from "./types";
 
 import { getCurrentFavour } from "./favour";
@@ -47,6 +49,8 @@ export const getRequests = (
     filters += "owner=" + userId;
   } else if (requestFilter === "sent") {
     filters += "helper=" + userId;
+  } else if (requestFilter === "all") {
+    filters += "owner=" + userId + "&helper=" + userId;
   }
 
   try {
@@ -62,6 +66,21 @@ export const getRequests = (
     }, 600);
   } catch (err) {
     dispatch({ type: GET_REQUESTS_FAILED });
+  }
+};
+
+export const checkPendingRequests = userId => async dispatch => {
+  try {
+    const requests = await axios.get(
+      `/favourRequests/?owner=${userId}&status=Pending&op=$and`
+    );
+
+    dispatch({
+      type: CHECK_PENDING_REQUESTS,
+      payload: requests.data.length > 0 ? true : false
+    });
+  } catch (err) {
+    dispatch({ type: CHECK_PENDING_REQUESTS_FAILED });
   }
 };
 
@@ -92,7 +111,7 @@ export const takeRequestBack = requestId => async dispatch => {
 
 export const unmountRequests = () => ({ type: UNMOUNT_REQUESTS });
 
-export const acceptRequest = requestId => async dispatch => {
+export const acceptRequest = (requestId, pagePath) => async dispatch => {
   try {
     // Set request as accepted
     const res = await axios.patch("/favourRequests/" + requestId, {
@@ -115,16 +134,25 @@ export const acceptRequest = requestId => async dispatch => {
     });
 
     // Display new content & alerts
-    dispatch(getCurrentFavour(res.data.favour));
-    dispatch(getRequests(res.data.favour));
+    if (pagePath === "/requests/") {
+      dispatch(getRequests(null, res.data.owner._id));
+    } else if (pagePath === "/favour/:id") {
+      dispatch(getCurrentFavour(res.data.favour));
+      dispatch(getRequests(res.data.favour));
+    }
+    dispatch(checkPendingRequests(res.data.owner._id));
     dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request accepted`, "info"));
+
+    // Return request response to update the content
+    // displayed conditionally depending on the page
+    return res;
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }
 };
 
-export const declineRequest = requestId => async dispatch => {
+export const declineRequest = (requestId, pagePath) => async dispatch => {
   try {
     // Set request as declined
     const res = await axios.patch("/favourRequests/" + requestId, {
@@ -132,35 +160,15 @@ export const declineRequest = requestId => async dispatch => {
     });
 
     // Display new content & alerts
-    dispatch(getRequests(res.data.favour));
+    if (pagePath === "/requests/") {
+      dispatch(getRequests(null, res.data.owner));
+    } else if (pagePath === "/favour/:id") {
+      dispatch(getRequests(res.data.favour));
+    }
+    console.log('RESPUESTA',res.data)
+    dispatch(checkPendingRequests(res.data.owner));
     dispatch(clearAlerts());
     dispatch(setAlert(`${res.data.helper.name}'s request declined`, "info"));
-  } catch (err) {
-    handleServerErrors(err, dispatch, setAlert);
-  }
-};
-
-export const readRequests = () => async (dispatch, getState) => {
-  let requestsId = [];
-  const requestsUnread = getState().requests.requests.filter(
-    request =>
-      request.read === false && request.owner._id === getState().auth.user._id
-  );
-  for (let request of requestsUnread) {
-    requestsId.push(request._id);
-  }
-
-  console.log("RequestsId", requestsId);
-
-  try {
-    // Set unread requests as read
-    if (requestsId.length > 0) {
-      await axios.patch("/favourRequests/updateMany", {
-        action: "setUnreadRequestsAsRead",
-        requestsId,
-        update: { read: true }
-      });
-    }
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }

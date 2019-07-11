@@ -37,21 +37,19 @@ export const getRequests = (
   userId,
   requestFilter
 ) => async dispatch => {
+  let filters = "";
 
-  let filters = '';
+  if (favourId || userId) filters = "?";
 
-    if(favourId || userId) filters = '?';
-
-    if (favourId) {
-      filters += 'favour=' + favourId;
-    } else if (requestFilter === "received") {
-      filters += 'owner=' + userId;
-    } else if (requestFilter === "sent") {
-      filters += 'helper=' + userId;
-    } 
+  if (favourId) {
+    filters += "favour=" + favourId;
+  } else if (requestFilter === "received") {
+    filters += "owner=" + userId;
+  } else if (requestFilter === "sent") {
+    filters += "helper=" + userId;
+  }
 
   try {
-
     const requests = await axios.get(`/favourRequests/${filters}`);
 
     dispatch({ type: REQUESTS_LOADING });
@@ -145,19 +143,24 @@ export const declineRequest = requestId => async dispatch => {
 export const readRequests = () => async (dispatch, getState) => {
   let requestsId = [];
   const requestsUnread = getState().requests.requests.filter(
-    request => request.read === false && request.owner._id === getState().auth.user._id
+    request =>
+      request.read === false && request.owner._id === getState().auth.user._id
   );
   for (let request of requestsUnread) {
     requestsId.push(request._id);
   }
 
+  console.log("RequestsId", requestsId);
+
   try {
     // Set unread requests as read
-    await axios.patch("/favourRequests/updateMany", {
-      action: "setUnreadRequestsAsRead",
-      requestsId,
-      update: { read: true }
-    });
+    if (requestsId.length > 0) {
+      await axios.patch("/favourRequests/updateMany", {
+        action: "setUnreadRequestsAsRead",
+        requestsId,
+        update: { read: true }
+      });
+    }
   } catch (err) {
     handleServerErrors(err, dispatch, setAlert);
   }

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import { Image, Media, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import moment from "moment";
 import "./RequestsListItem.css";
 
 import { requestStatusVariant } from "./requestsHelpers";
@@ -17,6 +18,8 @@ import { connect } from "react-redux";
 import userImage from "../../../assets/img/user/undefined.gif";
 
 const RequestsListItem = ({ match, user, ...request }) => {
+  console.log(typeof request.createdAt);
+  const createdAt = moment(request.createdAt).format("YYYY-MM-DD HH:MM");
   return (
     <Media className="notification-card-one d-flex align-items-center mb-4">
       <div>
@@ -39,14 +42,17 @@ const RequestsListItem = ({ match, user, ...request }) => {
               <h5 className="fs-14 m-0">{request.favour.title}</h5>
             </Link>
           ) : (
-            <h5 className="fs-14 m-0">{request.helper.name}</h5>
+            <Fragment>
+              <h5 className="fs-14 m-0">{request.helper.name}</h5>
+              <p>{createdAt}</p>
+            </Fragment>
           )}
 
           {match.path === "/requests/" ? (
             isOwner(request.owner._id, user._id) ? (
-              <p>{`Helper: " ${request.helper.name}`}</p>
+              <p>{`Helper: " ${request.helper.name} - ${createdAt}`}</p>
             ) : (
-              <p>{`Owner: ${request.owner.name}`}</p>
+              <p>{`Owner: ${request.owner.name} - ${createdAt}`}</p>
             )
           ) : (
             <div />
